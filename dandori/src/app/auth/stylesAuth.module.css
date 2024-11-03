@@ -1,0 +1,109 @@
+.mainContainer{
+    display: flex;
+    height: 100vh;
+}
+
+.responsiveContainer{
+    flex: 1;
+    height: 100%;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.formContainer{
+    overflow-y: auto;
+    width: 40vw;
+    padding-top: 2em;
+    padding-left: 2em;
+    padding-right: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.themeButton{
+    display: flex;
+    justify-content: right;
+}
+
+.CenterContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+    padding-top: 2em;
+    padding-left: 2em;
+    padding-right: 2em;
+    gap: 1em;
+}
+
+.logoContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.formTittle {
+    font-family: var(--font-poppins);
+    font-size: 3.313em;
+    text-align: center;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+}
+
+.input:focus {
+    border-color: #0070f3;
+    outline: none;
+}
+
+.prueba{
+    background-color: #cbf6e3;
+}
+
+.buttonTitle{
+    font-family: var(--font-poppins);
+}
+
+.termsAndConditionsDescription {
+    color: #B6B6B6;
+}
+
+.actionDescription {
+    font-weight: lighter;
+}
+
+@media(max-width: 1124px) {
+    .formContainer{
+        width: 45vw;
+    }
+    .formTittle {
+        font-size: 3.125em;
+    }
+}
+
+@media(max-width: 990px) {
+    .responsiveContainer{
+        display: none;
+    }
+    .formContainer{
+        width: 100vw;
+    }
+    .formTittle {
+        font-size: 40px;
+    }
+}
