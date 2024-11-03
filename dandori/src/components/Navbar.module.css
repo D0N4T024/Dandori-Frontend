@@ -1,0 +1,38 @@
+.leftContainer {
+    display: flex;
+    align-items: center;
+    gap: 1.2em;
+}
+
+.rightContainer{
+    display: flex;
+    gap: 1.2em;
+    align-items: center;
+}
+
+.largeLogo {
+    display: block;
+}
+
+.shortLogo {
+    display: none;
+}
+
+.SidebarToggle {
+    display: none;
+}
+
+@media(max-width: 800px) {
+    .largeLogo {
+        display: none;
+    }
+    .shortLogo {
+        display: block;
+    }
+    .concealable {
+        display: none;
+    }
+    .SidebarToggle {
+        display: block;
+    }
+}
