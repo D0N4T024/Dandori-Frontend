@@ -1,0 +1,135 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 5em;
+    padding-top: 8em;
+    padding-bottom: 3em;
+    gap: 1.5em;
+    overflow-y: hidden;
+    flex-grow: 1;
+}
+
+.topContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.result {
+    display: flex;
+    justify-content: end;
+    padding-inline: 2em;
+}
+
+
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+  
+.dropdownToggle {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(128, 128, 128, 0.2);
+}
+  
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 4px;
+    width: 100%;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(128, 128, 128, 0.2);
+    padding-block: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+  
+.dropdownOption {
+    list-style: none;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+  
+.dropdownOption:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+.productsContainer {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    gap: 1em;
+    overflow-y: auto;
+    padding: 1em;
+}
+
+.product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-width: 1px;
+    border-color: #979898;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0.5em;
+}
+
+.leftSide{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 2em;
+    width: 50%;
+}
+
+.rightSide{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
+.quantityDropdown {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 25px;
+    width: auto;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(128, 128, 128, 0.2);
+}
+
+.detail {
+    font-family: var(--font-poppins);
+}
+
+.emptyCartContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.emptyCartDescription {
+    text-align: center;
+    padding-block: 2em;
+    font-family: var(--font-poppins);
+}
