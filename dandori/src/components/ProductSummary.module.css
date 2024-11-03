@@ -1,0 +1,39 @@
+.mainCointainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    overflow-y: auto;
+    padding: 0.5em;
+}
+
+.product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-width: 1px;
+    border-color: #979898;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding-block: 0.5em;
+    padding-inline: 1em;
+}
+
+.leftSide{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2em;
+    width: 40%;
+}
+
+.rightSide{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+
+}
+
+.detail {
+    font-family: var(--font-poppins);
+}
