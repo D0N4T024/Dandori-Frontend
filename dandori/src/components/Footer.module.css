@@ -1,0 +1,76 @@
+.mainContainer{
+    background-color: #011627;
+    color: white;
+    border-top-color: #FDFFFC;
+    border-top-width: 1px;
+    height: auto;
+}
+
+
+.lowerContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top-color: #FDFFFC;
+    border-top-width: 1px;
+    margin-inline: 2.5em;
+    padding-block: 1em;
+}
+
+.upperContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 2.5em;
+    padding-block: 1.5em;
+    flex-wrap: wrap;
+}
+
+.leftContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 50%;
+    height: 100%;
+    gap: 1em;
+}
+
+.rightContainer{
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    gap: 2em;
+}
+
+.steps{
+    display: flex;
+    justify-content: space-around;
+}
+
+.step{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.promotion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5em;
+}
+
+@media(max-width: 800px) {
+    .rightContainer{
+        display: none;
+    }
+    .leftContainer{
+        width: 100%;
+    }
+    .lowerContainer{
+        margin-inline: 2em;
+    }
+    .upperContainer{
+        padding-inline: 2em;
+    }
+}
