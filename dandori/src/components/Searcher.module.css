@@ -1,0 +1,44 @@
+.mainContainer {
+    display: flex;
+    align-items: stretch;
+    width: 559px;
+    border-radius: 2em;
+    background-color: #FDFFFC;
+    border-width: 1px;
+    border-color: #979898;
+}
+
+.filterButton {
+    display: flex;
+    align-items: center;
+    background-color: #f2f3f4;
+    color: #011627;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    font-size: "18px";
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+    border-right-width: 1px;
+    border-right-color: #979898;
+    height: 100%;
+}
+
+.filterButton:hover {
+    background-color: #d7dbdd;
+}
+
+.filterButton:active {
+    background-color: #cccecb;
+}
+
+.inputContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+@media(max-width: 1200px) {
+    .mainContainer {
+        display: none;
+    }
+}
