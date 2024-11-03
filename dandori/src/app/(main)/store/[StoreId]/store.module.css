@@ -1,0 +1,64 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px;
+    padding-bottom: 3em;
+    justify-content: stretch;
+    gap: 1.5em;
+    overflow-y: hidden;
+}
+
+.frontImage {
+    width: 100vw;
+    height: 230px;
+    object-fit: cover;
+}
+
+.detailsContainer {
+    display: flex;
+    align-items: center;
+    margin-inline: 5em;
+    gap: 2em;
+    padding-block: 2em;
+}
+
+.logo {
+    border-radius: 10px;
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.categories {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5em;
+}
+
+.categoriesTitles {
+    margin-inline: 5rem;
+}
+
+@media (max-width: 990px) {
+    .detailsContainer {
+        margin-inline: 2em;
+    }
+    .categoriesTitles {
+        margin-inline: 2rem;
+    }
+}
+
+@media(max-width: 800px) {
+    .detailsContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 2em;
+        padding-block: 2em;
+    }
+    .textContainer{
+        text-align: center;
+    }
+}
