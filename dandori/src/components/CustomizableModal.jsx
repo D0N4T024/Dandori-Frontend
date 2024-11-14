@@ -9,7 +9,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '70vw',
+  maxWidth: '99vw',
   maxHeight: '80vh',
   borderRadius: '25px',
   overflowY: 'hidden',
@@ -19,10 +19,11 @@ const style = {
 };
 
 
-export default function CustomizableModal({ content, textTag }) {
+export default function CustomizableModal({ content, textTag, data:data }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
 
   return (
     <div>
@@ -48,7 +49,7 @@ export default function CustomizableModal({ content, textTag }) {
                         marginRight: '0.5em',
                     }}
                 >
-                    {content()}
+                    {content({data:data})}
                 </div>
             </Box>
         </Modal>
