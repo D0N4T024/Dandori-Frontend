@@ -55,19 +55,7 @@ const TextTag = ({ design:design, text:text}) => {
                 style={{ fontSize: '40px', fontFamily: 'var(--font-poppins)', color:'#F71735' }}
             >{text}</h2>
         )
-    } else if (design === "step1") {
-        return(
-            <h2
-                style={{fontSize: '40px', fontFamily: 'var(--font-poppins)'}}
-            >{text}</h2>
-        )
-    } else if (design === "step2") {
-        return(
-            <h2
-                style={{fontSize: '40px', fontFamily: 'var(--font-poppins)'}}
-            >{text}</h2>
-        )
-    } else if (design === "step3") {
+    } else if (design === "step1" || design === "step2" || design === "step3") {
         return(
             <h2
                 style={{fontSize: '40px', fontFamily: 'var(--font-poppins)'}}
@@ -76,7 +64,7 @@ const TextTag = ({ design:design, text:text}) => {
     } else {
         return(
             <p
-                style={{ color:'#F71735', fontSize: '1em' }}
+                style={{ color:'#F71735', fontSize: '1em', fontWeight: '300' }}
             >{text}</p>
         )
     }
