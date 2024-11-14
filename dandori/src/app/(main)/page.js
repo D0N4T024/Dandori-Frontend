@@ -63,46 +63,10 @@ export default function Home() {
         />
       </div>
 
-      {/* <div>
-        <h1>Como funcIona</h1>
-        <h2>Como funciona</h2>
-        <h3>Como funciona</h3>
-        <h4>Como funciona</h4>
-        <h5>Como funciona</h5>
-        <p>Como funciona</p>
-        <br/>
-
-        <h1 style={{fontFamily:"var(--font-poppins)"}} className="text-5xl">Encabezado H1</h1>
-        <h2 style={{fontFamily:"var(--font-poppins)"}} className="text-4xl">Encabezado H2</h2>
-        <h2 style={{fontFamily:"var(--font-poppins)"}} className="text-3xl">Encabezado H3</h2>
-        <h2 style={{fontFamily:"var(--font-poppins)"}} className="text-2xl">Encabezado H4</h2>
-        <h2 style={{fontFamily:"var(--font-poppins)"}} className="text-1xl">Encabezado H5</h2>
-        <p style={{fontFamily:"var(--font-poppins)"}} className="text-base">Este es un párrafo p</p>
-        <br/>
-
-        <h1 style={{fontFamily:"var(--font-poppins)"}} className="text-h1">Encabezado H1</h1>
-        <h2 style={{fontFamily:"var(--font-poppins)"}} className="text-h2">Encabezado H2</h2>
-        <p style={{fontFamily:"var(--font-poppins)"}} className="text-p">Este es un párrafo p</p>
-
-      </div> */}
-
       <div className={styles.categoriesContainer}>
         <h3>Categorias de comida</h3>
         <Categories categories={categories}/>
       </div>
-
-      {/* <div>
-        Comida recomendada
-      </div>
-
-      <div>
-        Comida popular
-      </div> */}
-
-
-      
-      {/* <img src="https://static.vecteezy.com/system/resources/previews/005/068/370/non_2x/abstract-orange-and-white-color-background-with-geometric-shape-illustration-vector.jpg" alt="img"/> */}
-      
     </main>
   );
 }
