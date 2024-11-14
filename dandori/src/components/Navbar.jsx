@@ -14,6 +14,8 @@ import { useEffect } from "react";
 import Image from 'next/image';
 import { Skeleton } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
+import CustomizableModal from './CustomizableModal';
+import CodeScanner from './CodeScanner';
 import Zoom from '@mui/material/Zoom';
 
 
@@ -71,12 +73,12 @@ export default function Navbar() {
           <ThemeSwitch/>
         </div>
       
-
-      <Tooltip title="Lector QR" enterDelay={500} TransitionComponent={Zoom} arrow>
+      <CodeScanner/>
+      {/* <Tooltip title="Lector QR" enterDelay={500} TransitionComponent={Zoom} arrow>
         <button className={`iconButton ${styles.concealable}`}>
           <QrCode2Icon/>
         </button> 
-      </Tooltip>
+      </Tooltip> */}
       
       <Tooltip title="Carrito" enterDelay={500} TransitionComponent={Zoom} arrow>
         <Link href="/cart" className="iconButton">
@@ -87,5 +89,3 @@ export default function Navbar() {
     </div>
   </nav>
 }
-
-
