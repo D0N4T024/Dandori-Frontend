@@ -1,0 +1,45 @@
+.mainContainer {
+    display: flex;
+    gap: calc(3em + 40px);
+    overflow-y: hidden;
+    position: relative;
+    
+}
+
+.titleContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.logoSupermarket {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.leftProduct {
+    overflow-y: auto;
+}
+
+.rightProduct {
+    overflow-y: auto;
+}
+
+.priceAndOptions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.comparationIcon {
+    
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    top: 50%;
+    left: calc(50% - 20px);
+    justify-content: center;
+    justify-self: center;
+}
