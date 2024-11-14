@@ -1,0 +1,106 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    padding-top: 8em;
+    justify-content: stretch;
+    gap: 1.5em;
+    overflow-y: hidden;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1em;
+    padding-inline: 5em;
+    
+}
+
+.supermarketTitle {
+    color:#F71735;
+    text-transform: capitalize;
+    font-weight: 300;
+}
+
+.topInfo {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    padding-inline: 5em;
+}
+
+.topImage {
+    border-radius: 10px;
+}
+
+.topDescriptionOptions {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 1em;
+}
+
+.topOptions {
+    display: flex;
+    flex-direction: column;
+    align-self: end;
+    gap: 0.5em;
+}
+
+.topCartOptions {
+    display: flex;
+    gap: 0.5em;
+
+}
+
+.bottomInfo {
+
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding-inline: 5em;
+    padding-block: 3em;
+    background-color: rgb(203, 246, 227, 0.9);
+    gap: 2em;
+}
+
+
+
+.nutritionData {
+    width: 100%;
+}
+
+.CostTrendChart {
+    width: 100%;
+
+}
+
+@media (max-width: 990px) {
+    .title {
+        padding-inline: 2em;
+    }
+    .topInfo {
+        padding-inline: 2em;
+    }
+    .bottomInfo {
+        padding-inline: 2em;
+        flex-direction: column-reverse;
+        
+    }
+}
+
+@media(max-width: 800px) {
+    .title {
+        padding-inline: 2rem;
+    }
+    .topInfo {
+        flex-direction: column;
+        align-items: center;
+        gap: 2em;
+        padding-block: 2em;
+    }
+    .topDescriptionOptions {
+        align-items: center;
+    }
+}
+
