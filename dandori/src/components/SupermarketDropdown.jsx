@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import MenuItem from '@mui/material/MenuItem';
 
-
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import styles from './SupermarketDropdown.module.css';
@@ -62,16 +61,10 @@ const SupermarketDropdown = ({ supermarkets:supermarkets }) => {
                         ))}
                     </ul>
                 </ClickAwayListener>
-                
             )}
         </div>
     );
 };
-
-
-
-
-
 
 
 const supermarkets = [
@@ -168,4 +161,3 @@ function Filter() {
 }
 
 export default SupermarketDropdown;
-// export default Filter;
