@@ -3,10 +3,11 @@ import Link from "next/link"
 import styles from "./ProductCard.module.css"
 import { Button } from "@mui/material"
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function ProductCard({ product:product }) {
     const router = useRouter()
+    const pathname = usePathname()
 
     const buttonStyle = {
         background:"#F79F1A",
@@ -20,7 +21,7 @@ export default function ProductCard({ product:product }) {
     }
 
     return(
-        <div className={styles.card} onClick={() => router.push('/')}>
+        <div className={styles.card} onClick={() => product.supermarket ? router.push(`/store/${product.supermarket}/${product.name}`) : router.push(`${pathname}/${product.name}`)}>
             <div className={styles.imageContainer}>
                 <img
                     src={product.image}
@@ -28,12 +29,11 @@ export default function ProductCard({ product:product }) {
                     loading="lazy"
                     className={styles.image}
                 />
-                    <Link href="/search">
+                    <Link href="/search" onClick={(e) => e.stopPropagation()}>
                         <Button variant="contained" sx={buttonStyle}>
                             <SyncAltIcon/>
                         </Button> 
                     </Link>
-                    
             </div>
             {product.supermarket ? (
                 <div className={styles.descriptionContainer}>
@@ -42,7 +42,8 @@ export default function ProductCard({ product:product }) {
                     </div>
                     <div className={styles.lowerDescription}>
                         <Link 
-                            href="/store"
+                            href={`/store/${product.supermarket}`}
+                            onClick={(e) => e.stopPropagation()}
                             className={styles.details}
                             style={{textDecoration: 'underline', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}
                         >
@@ -52,7 +53,6 @@ export default function ProductCard({ product:product }) {
                     </div>
                 </div>
             ) : (
-
                 <div className={styles.descriptionContainer}>
                     <div className={styles.upperDescription}>
                         <h4 className={styles.productName2}>{product.name}</h4>
