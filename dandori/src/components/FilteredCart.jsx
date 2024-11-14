@@ -21,8 +21,6 @@ function QuantityDropdown ({ quantity:quantity }) {
     };
     
     const options = [...Array(99).keys()].map(i => i + 1);
-
-    
     
     return(
         <div className={styles.dropdown}>
