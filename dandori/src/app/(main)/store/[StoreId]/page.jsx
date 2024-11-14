@@ -119,7 +119,7 @@ export default function Store({ params }) {
                     />
                 <div className={styles.textContainer}>
                     <h3>Supermercado {store.name}</h3>
-                    <p>{store.description}</p>
+                    <p style={{ fontWeight: "300" }}>{store.description}</p>
                 </div>
             </div>
 
