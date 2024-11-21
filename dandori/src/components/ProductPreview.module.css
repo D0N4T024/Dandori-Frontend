@@ -1,0 +1,60 @@
+.mainContainer {
+    display: flex;
+    gap: 1em;
+    border-radius: 20px;
+    height: auto;
+    min-height: 90px;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.5em;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(128, 128, 128, 0.4);
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.productImage {
+    border-radius: 8px;
+    object-fit: cover;
+    /* max-height: 90px; */
+    width: 25%;
+
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    width: 75%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    gap: 1em;
+}
+
+.subDetails {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.productName {
+    font-family: var(--font-poppins);
+    height: auto;
+    /* flex-shrink: 1; */
+    text-transform: capitalize;
+}
+
+.supermarketLogo {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.price {
+    font-family: var(--font-poppins);
+}
