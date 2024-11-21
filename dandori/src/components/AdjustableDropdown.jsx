@@ -20,7 +20,7 @@ export default function AdjustableDropdown ({ value:value, options:options }) {
     return(
         <div className={styles.dropdown}>
             <div className={styles.quantityDropdown} onClick={toggleDropdown}>
-                <h5>{selectedOption}</h5>
+                <p className={styles.font}>{selectedOption}</p>
                 {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </div>
             {isOpen && (
@@ -32,7 +32,7 @@ export default function AdjustableDropdown ({ value:value, options:options }) {
                                 className={styles.dropdownOption}
                                 onClick={() => handleOptionClick(option)}
                             >
-                                {option}
+                                <p>{option}</p>
                             </li>
                         ))}
                     </ul>
