@@ -1,7 +1,18 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
 
-const NutritionData = ({ data }) => {
+const NutritionData = ({ data, compareData = [] }) => {
+    const getComparisonColor = (difference) => {
+        if (difference < 0) return 'green'; // Si la diferencia es negativa, es menor (verde)
+        if (difference > 0) return 'red';   // Si la diferencia es positiva, es mayor (rojo)
+        return 'black'; // Sin cambios
+      };
+    
+    const parseValue = (value) => {
+        // Convertir valor a número ignorando unidades (e.g., "15,13 g" → 15.13)
+        return parseFloat(value.replace(',', '.').replace(/[^\d.-]/g, ''));
+    };
+
     return (
         <Card
             sx={{
@@ -28,14 +39,46 @@ const NutritionData = ({ data }) => {
                     Datos nutricionales
                 </Typography>
 
-                {data.map((item, index) => (
+                {/* {data.map((item, index) => (
                     <Box key={index} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                         <Typography variant="body1" sx={{ fontWeight: item.subItem ? 'normal' : 'bold', ml: item.subItem ? 2 : 0 }}>
                             {item.label}
                         </Typography>
                         <Typography variant="body1">{item.value}</Typography>
                     </Box>
-                ))}
+                ))} */}
+                {data.map((item, index) => {
+          const comparisonItem = compareData.find((comp) => comp.label === item.label);
+          const comparisonValue = comparisonItem ? parseValue(comparisonItem.value) : null;
+          const originalValue = parseValue(item.value);
+
+          // Calcular diferencia
+          const difference = comparisonValue !== null ? originalValue - comparisonValue : null;
+
+          // Obtener color basado en la diferencia
+          const color = difference !== null ? getComparisonColor(difference) : 'black';
+
+          return (
+            <Box key={index} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: item.subItem ? 'normal' : 'bold', ml: item.subItem ? 2 : 0 }}
+              >
+                {item.label}
+              </Typography>
+              <Box display="flex" alignItems="center">
+                {comparisonValue !== null && (
+                  <Typography variant="body1" sx={{ color, mr: 1 }}>
+                    ({difference > 0 ? '+' : ''}{difference.toFixed(2)})
+                  </Typography>
+                )}
+                <Typography variant="body1">
+                  {item.value}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        })}
             </CardContent>
         </Card>
     );
