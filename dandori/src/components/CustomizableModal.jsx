@@ -9,7 +9,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  maxWidth: '99vw',
+  maxWidth: '95vw',
   maxHeight: '80vh',
   borderRadius: '25px',
   overflowY: 'hidden',
@@ -20,10 +20,9 @@ const style = {
 
 
 export default function CustomizableModal({ content, textTag, data:data }) {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
   return (
     <div>
@@ -41,7 +40,7 @@ export default function CustomizableModal({ content, textTag, data:data }) {
                 <div 
                     style={{
                         maxHeight: '75vh',
-                        overflowY: 'auto',
+                        overflowY: 'hidden',
                         marginTop: '3em',
                         marginLeft: '2em',
                         paddingBottom: '2em',

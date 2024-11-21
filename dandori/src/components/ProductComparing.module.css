@@ -1,9 +1,11 @@
 .mainContainer {
     display: flex;
-    gap: calc(3em + 40px);
+    gap: calc(2em + 40px);
     overflow-y: hidden;
     position: relative;
-    
+    width: 100vw;
+    max-width: 1200px;
+    max-height: 75vh;
 }
 
 .titleContainer {
@@ -19,12 +21,29 @@
     object-fit: cover;
 }
 
+.mainImage {
+    max-width: 70%;
+    align-self: center;
+}
+
 .leftProduct {
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 50%;
+    padding-inline: 0.5em;
+    padding-bottom: 1em;
 }
 
 .rightProduct {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
     overflow-y: auto;
+    width: 50%;
+    padding-inline: 0.5em;
+    padding-bottom: 1em;
 }
 
 .priceAndOptions {
@@ -34,12 +53,13 @@
 }
 
 .comparationIcon {
-    
     width: 40px;
     height: 40px;
     position: fixed;
     top: 50%;
-    left: calc(50% - 20px);
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
     justify-content: center;
     justify-self: center;
 }
