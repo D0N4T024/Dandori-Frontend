@@ -62,7 +62,7 @@
 
 .additionalOptions {
     display: flex;
-    justify-content: space-around;
+    justify-content: start;
 }
 
 .howWorks {
@@ -84,5 +84,8 @@
     }
     .howWorks {
         display: block;
+    }
+    .additionalOptions {
+        justify-content: space-around;
     }
 }
