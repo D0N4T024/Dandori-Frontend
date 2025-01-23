@@ -98,7 +98,7 @@ export default function Store({ params }) {
     return(
         <div className={styles.mainContainer}>
             <img
-                src={supermarket.urlPreviewLogo}
+                src={supermarket.urlBusinessLogo}
                 className={styles.frontImage}
             />
             <div className={styles.detailsContainer}>
