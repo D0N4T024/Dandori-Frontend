@@ -10,6 +10,8 @@ export function middleware(request) {
         if (!cookie) {
             return NextResponse.redirect(new URL('/auth/signIn', request.url));
         }
+
+        console.log("cookie: ", cookie)
         
         const token = decodeURIComponent(cookie.value?.replace('Bearer ', ''));
 
@@ -18,6 +20,8 @@ export function middleware(request) {
         }
         
         const decoded = decodeJwt(token);
+
+        console.log("decodedToken: ", decoded)
 
         // Verifica si el token ha expirado
         const now = Math.floor(Date.now() / 1000);
@@ -30,14 +34,14 @@ export function middleware(request) {
         // Verifica la ruta actual
         const pathname = request.nextUrl.pathname;
 
+        console.log("Middleware pathname: ", pathname)
+
         if (pathname.startsWith('/admin')) {
             // Si es una ruta de admin, verifica que el usuario sea administrador
             if (!decoded.isAdmin) {
                 return NextResponse.redirect(new URL('/auth/signIn', request.url));
             }
         }
-
-
 
         return NextResponse.next()
     } catch (error) {

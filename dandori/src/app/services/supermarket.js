@@ -57,9 +57,9 @@ export const updateSupermarket = async (id, data) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    const data = response.json();
-    if (!response.ok) throw new Error(data.message || 'Failed to update supermarket');
-    return data;
+    const result = response.json();
+    if (!response.ok) throw new Error(result.message || 'Failed to update supermarket');
+    return result;
   } catch (error) {
     console.error('Error updating supermarket:', error);
     throw error;

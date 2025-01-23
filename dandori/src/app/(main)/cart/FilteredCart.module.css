@@ -183,4 +183,7 @@
         width: 100%;
         flex-wrap: wrap;
     }
+    .detail {
+        text-align: center;
+    }
 }
