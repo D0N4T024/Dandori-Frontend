@@ -22,8 +22,11 @@ export default function Search({ searchParams }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  console.log("SearchParams: ", searchParams)
+
   // Fetch products based on search, page, and limit
   const fetchProducts = async (searchQuery, page, limit) => {
+    console.log("SearchQuery: ", searchQuery, "Page: ", page, )
     try {
       setError("");
       setLoading(true);
