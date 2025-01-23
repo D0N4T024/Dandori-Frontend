@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/users';
+const BASE_URL = 'https://dandori-api-production.up.railway.app/api/users';
 
 export const getAllUsers = async () => {
     try {

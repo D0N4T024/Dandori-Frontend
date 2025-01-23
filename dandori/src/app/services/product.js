@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/products';
+const BASE_URL = 'https://dandori-api-production.up.railway.app/api/products';
 
 // Buscar productos con paginación
 export const searchProducts = async (search, page = 1, limit = 5) => {

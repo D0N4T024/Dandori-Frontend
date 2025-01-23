@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/shopping-lists";
+const BASE_URL = "https://dandori-api-production.up.railway.app/api/shopping-lists";
 
 
 export const getShoppingList = async (userId, supermarketId) => {

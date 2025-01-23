@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/brands';
+const BASE_URL = 'https://dandori-api-production.up.railway.app/api/brands';
 
 // Obtener todas las marcas simples
 export const getAllSimpleBrands = async () => {

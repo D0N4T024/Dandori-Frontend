@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/posts';
+const BASE_URL = 'https://dandori-api-production.up.railway.app/api/posts';
 
 // Obtener todos los posts con paginación
 export const getPosts = async (page = 1) => {

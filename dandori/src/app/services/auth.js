@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/auth';
+const BASE_URL = 'https://dandori-api-production.up.railway.app/api/auth';
 
 // Registrar usuario (signup)
 export const signup = async (email, password) => {

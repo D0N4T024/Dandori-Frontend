@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/categories';
+const BASE_URL = 'https://dandori-api-production.up.railway.app/api/categories';
 
 // Crear una categoría
 export const createCategory = async (data) => {

@@ -46,7 +46,7 @@ const categories = [
 
 export default async function Home() {
   try{
-    const res = await fetch("http://localhost:8000/api/supermarkets/getAll")
+    const res = await fetch("https://dandori-api-production.up.railway.app/api/supermarkets/getAll")
     const supermarkets = res.json()
     console.log(supermarkets)
   }
