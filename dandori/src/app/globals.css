@@ -15,7 +15,7 @@ body {
   overflow-x: hidden;
 }
 
-nav {
+#main-nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -33,13 +33,13 @@ nav {
   transition: background-color 0.3s ease;
 }
 
-nav.scrolled {
+#main-nav.scrolled {
   background-color: rgba(128, 128, 128, 0.1);
   backdrop-filter: blur(3px); /*Aplica desenfoque cuando haya scroll*/
 }
 
 @media(max-width: 990px) {
-  nav {
+  #main-nav {
     padding-inline: 2em;
     gap: 0em;
   }
