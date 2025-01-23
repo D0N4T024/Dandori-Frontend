@@ -60,6 +60,15 @@
     gap: 1.5em;
 }
 
+.additionalOptions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.howWorks {
+    display: none;
+}
+
 @media(max-width: 800px) {
     .rightContainer{
         display: none;
@@ -72,5 +81,8 @@
     }
     .upperContainer{
         padding-inline: 2em;
+    }
+    .howWorks {
+        display: block;
     }
 }

@@ -8,6 +8,17 @@
     border-color: #979898;
 }
 
+.modalContainer {
+    display: flex;
+    align-items: stretch;
+    width: calc( 100vw - 2em);
+    max-width: 559px;
+    border-radius: 2em;
+    background-color: #FDFFFC;
+    border-width: 1px;
+    border-color: #979898;
+}
+
 .filterButton {
     display: flex;
     align-items: center;
@@ -37,7 +48,14 @@
     width: 100%;
 }
 
+.shortSearchComponent {
+    display: none;
+}
+
 @media(max-width: 1200px) {
+    .shortSearchComponent {
+        display: block;
+    }
     .mainContainer {
         display: none;
     }

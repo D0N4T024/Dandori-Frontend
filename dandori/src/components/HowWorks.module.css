@@ -1,4 +1,5 @@
 .mainContainer {
+    width: 910px;
     display: flex;
     flex-direction: column;
     gap: 3em;
@@ -15,7 +16,9 @@
 
 .content {
     display: flex;
+    /* flex-wrap: wrap; */
     justify-content: space-between;
+    align-items: center;
     gap: 1.5em;
 
 }
@@ -24,7 +27,26 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1em;
+}
+
+.stepsDesign{
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    cursor: pointer
+}
+
+.steps2{
+    display: flex;
+    justify-content: space-around;
+}
+
+.step2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .firstStep {
@@ -50,4 +72,17 @@
 .textTag {
     font-size: 40px;
     font-family: var(--font-poppins);
+}
+
+@media(max-width: 1030px) {
+    .mainContainer {
+        width: calc(95vw - 3rem);
+        max-height: 75vh;
+        overflow-Y: auto;
+        padding-bottom: 1em
+    }
+    .content {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }

@@ -1,77 +1,103 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Modal from '@mui/material/Modal';
-import './Sidebar.css';
+import React, { useState, useEffect } from "react";
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Typography, Box } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import HowWorks from "./HowWorks"
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { useTheme } from 'next-themes'
+import Link from "next/link";
 
-const drawerWidth = 240;
-
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: '16px',
-    transition: 'margin 0.3s ease',
-    marginRight: open ? 0 : -drawerWidth,
-  })
-);
-
-const Sidebar = ({ open, handleClose }) => (
-  <div className="sidebar-content">
-    <div className="sidebar-header">
-      <IconButton onClick={handleClose}>
-        <ChevronRightIcon />
-      </IconButton>
-    </div>
-    <ul>
-      {['Modo Oscuro/Modo Claro', 'Ingles/Espanol', 'Lector de Barra'].map((text, index) => (
-        <li key={index}>{text}</li>
-      ))}
-    </ul>
-    <hr />
-    <ul>
-      {['Prueba1', 'Prueba2', 'Prueba3'].map((text, index) => (
-        <li key={index}>{text}</li>
-      ))}
-    </ul>
-  </div>
-);
-
-export default function SidebarWithModal() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { setTheme, resolvedTheme } = useTheme()
+  
+  // Cambia de fondo según el tema (puedes conectar esto con `useTheme` si usas un gestor de temas)
+  const backgroundColor = "#2C3E50"; // Oscuro para modo dark
+  const textColor = "white";
 
   return (
     <div>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="end"
-          onClick={handleDrawerOpen}
-        >
-          <MenuIcon />
-        </IconButton>
-      
-      {/* Modal for Sidebar */}
-      <Modal
-        open={open}
-        onClose={handleDrawerClose}
-        aria-labelledby="modal-sidebar-title"
-        aria-describedby="modal-sidebar-description"
+      <IconButton
+        onClick={() => setIsOpen(true)}
+        color="inherit"
+        aria-label="open drawer"
+        edge="end"
       >
-        <Box className="modal-box">
-          <Sidebar open={open} handleClose={handleDrawerClose} />
+        <MenuIcon />
+      </IconButton>
+
+      
+      <Drawer
+        anchor="left"
+        open={isOpen}
+        onClose={() => setIsOpen(false)} // Cierra el sidebar al hacer clic fuera
+        PaperProps={{
+          sx: {
+            width: 300,
+            backgroundColor: backgroundColor,
+            color: textColor,
+          },
+        }}
+      >
+        {/* Encabezado del Sidebar */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            p: 2,
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Menu
+          </Typography>
+          <IconButton onClick={() => setIsOpen(false)} sx={{ color: textColor }}>
+            <CloseIcon />
+          </IconButton>
         </Box>
-      </Modal>
-      </div>
+
+        {/* Lista de opciones */}
+        <List>
+          <ListItem
+            button
+            onClick={() => {
+              setTheme(resolvedTheme === "dark" ? 'light' : "dark")
+              setIsOpen(false)}
+            }
+          >
+            <ListItemIcon sx={{ color: textColor }}>{resolvedTheme === "dark" ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon>
+            <ListItemText primary={resolvedTheme === "dark" ? "Modo claro" : "Modo oscuro"} />
+          </ListItem>
+
+          <Link href="/cart">
+            <ListItem button>
+              <ListItemIcon sx={{ color: textColor }}><ShoppingCartIcon/></ListItemIcon>
+              <ListItemText primary="Carrito de presupuestos" />
+            </ListItem>
+          </Link>
+        </List>
+
+        {/* Sección final del sidebar */}
+        
+        <Box sx={{ mt: "auto", p: 2, borderTop: "1px solid gray" }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
+            ¿Cómo funciona?
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            1. Escanea codigos
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            2. Compara productos
+          </Typography>
+          <Typography variant="body2">
+            3. Presupuesta carritos
+          </Typography>
+        </Box>
+      </Drawer>
+    </div>
   );
-}
+};
+
+export default Sidebar;

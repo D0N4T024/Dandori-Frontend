@@ -2,7 +2,7 @@ import Typography from '@mui/material/Typography';
 
 export default function TermsAndConditions() {
   return (
-    <div style={{ width:"70vw" }}>
+    <div style={{ width:"70vw", height: "75vh", overflowY: "auto", paddingBottom: "1em" }}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
         Términos y Condiciones de Uso de Dandori
       </Typography>

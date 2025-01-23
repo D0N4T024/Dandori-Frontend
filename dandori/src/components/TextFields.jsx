@@ -41,7 +41,7 @@ const TextFields = forwardRef(function TextFields({ type, icon: Icon, errorMessa
       inputRef={ref} // Usamos inputRef para forwardRef
       variant="outlined"
       type="text"
-      value={Value ? Value : null}
+      value={Value ? Value : undefined}
       disabled={Disabled ? Disabled : false}
       error={!!errorMessage}
       helperText={errorMessage}
@@ -52,7 +52,7 @@ const TextFields = forwardRef(function TextFields({ type, icon: Icon, errorMessa
             <InputAdornment position="start">
               <Icon />
             </InputAdornment>
-          ) : null
+          ) : undefined
         }
       }}
       fullWidth
@@ -64,7 +64,7 @@ const TextFields = forwardRef(function TextFields({ type, icon: Icon, errorMessa
       inputRef={ref}
       variant="outlined"
       type={showPassword ? "text" : "password"}
-      value={Value ? Value:null}
+      value={Value ? Value: undefined}
       error={!!errorMessage}
       helperText={errorMessage}
       bgcolor={bgcolor}
@@ -74,7 +74,7 @@ const TextFields = forwardRef(function TextFields({ type, icon: Icon, errorMessa
             <InputAdornment position="start">
               <Icon />
             </InputAdornment>
-          ) : null,
+          ) : undefined,
           endAdornment: (
             <InputAdornment position="end">
               <IconButton onClick={handleClickShowPassword} edge="end">

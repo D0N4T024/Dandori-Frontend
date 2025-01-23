@@ -4,6 +4,7 @@
     border-radius: 20px;
     height: auto;
     min-height: 90px;
+    max-height: 180px;
     width: 100%;
     justify-content: space-between;
     padding: 0.5em;
@@ -16,9 +17,10 @@
 
 .productImage {
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain;
     /* max-height: 90px; */
     width: 25%;
+    max-height: 100%;
 
 }
 
@@ -42,10 +44,14 @@
 }
 
 .productName {
+    text-transform: capitalize;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limita a 3 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: var(--font-poppins);
     height: auto;
-    /* flex-shrink: 1; */
-    text-transform: capitalize;
 }
 
 .supermarketLogo {
@@ -57,4 +63,33 @@
 
 .price {
     font-family: var(--font-poppins);
+}
+
+@media(max-width: 800px) {
+    .mainContainer {
+        /* flex-wrap: wrap; */
+        max-height: none;
+        align-items: center;
+        justify-content: center;
+
+    }
+    .details {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .subDetails {
+        justify-content: space-around;
+    }
+}
+
+@media(max-width: 600px) {
+    .mainContainer {
+        flex-direction: column;
+    }
+    .productName {
+        text-align: center;
+    }
+    .productImage {
+        width: 45%;
+    }
 }

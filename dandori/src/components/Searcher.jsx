@@ -1,5 +1,6 @@
 "use client"
-import * as React from 'react';
+import { useState, useEffect, useRef} from 'react';
+
 import { useRouter } from 'next/navigation';
 import styles from "./Searcher.module.css"
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -13,19 +14,39 @@ import InputBase from '@mui/material/InputBase';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SearchIcon from '@mui/icons-material/Search';
-//Json de simulacion
-const supermarkets = [
-    {id: 1, title: "Sirena"},
-    {id: 2, title: "Jumbo"},
-    {id: 3, title: "Bravo"},
-    {id: 4, title: "Nacional"},
-]
+import { getAllSimpleSupermarkets } from '@/app/services/supermarket';
 
 function Filter() {
+  
+  const [supermarkets, setSupermarkets] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSupermarkets = async () => {
+      try {
+        const response = await getAllSimpleSupermarkets();
+        setSupermarkets(response.data); // Asume que la API devuelve `data` como la lista de supermercados
+      } catch (error) {
+        console.error("Error fetching supermarkets:", error);
+        setError(error)
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSupermarkets();
+  }, []);
+
+  // if (loading) return <p>Loading supermarkets...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+
+
+
+
   const router = useRouter();
   
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -47,8 +68,8 @@ function Filter() {
   }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
+  const prevOpen = useRef(open);
+  useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
@@ -94,8 +115,8 @@ function Filter() {
                       aria-labelledby="composition-button"
                       onKeyDown={handleListKeyDown}
                     >
-                        {supermarkets.map((supermarket) => (
-                          <MenuItem key={supermarket.id} onClick={() => handleClose(supermarket.title)}>{supermarket.title}</MenuItem>
+                        {supermarkets.map((supermarket, index) => (
+                          <MenuItem key={index} onClick={() => handleClose(supermarket.supermarketId)}>{supermarket.name}</MenuItem>
                         ))}
                     </MenuList>
                 </ClickAwayListener>
@@ -112,13 +133,8 @@ function Input() {
   // console.log(router.pathname); // Muestra la ruta actual
   // console.log(router.query);
 
-  const [searchValue, setSearchValue] = React.useState('');
-
-  const person = {
-    name: "Donato",
-    age: 12
-  }
-
+  const [searchValue, setSearchValue] = useState('');
+  
   const handleSearch = () => {
     if(searchValue !== ""){
       router.push(`/search?query=${searchValue}`);

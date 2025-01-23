@@ -1,4 +1,3 @@
-
 'use client';
 import styles from "./AdjustableDropdown.module.css"
 import { useState } from 'react';
@@ -6,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 
-export default function AdjustableDropdown ({ value:value, options:options }) {
+export default function AdjustableDropdown ({ value:value, options:options, onSelection }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(value);
 
@@ -14,6 +13,7 @@ export default function AdjustableDropdown ({ value:value, options:options }) {
 
     const handleOptionClick = (option) => {
         setSelectedOption(option);
+        onSelection(option)
         setIsOpen(false);
     };
     
@@ -37,7 +37,6 @@ export default function AdjustableDropdown ({ value:value, options:options }) {
                         ))}
                     </ul>
                 </ClickAwayListener>
-                
             )}
         </div>
     )

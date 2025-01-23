@@ -3,6 +3,8 @@ import Link from "next/link"
 import styles from "./ProductCard.module.css"
 import { Button } from "@mui/material"
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import Tooltip from '@mui/material/Tooltip';
+import Zoom from '@mui/material/Zoom';
 import { useRouter, usePathname } from 'next/navigation'
 
 export default function ProductCard({ product:product }) {
@@ -21,7 +23,12 @@ export default function ProductCard({ product:product }) {
     }
 
     return(
-        <div className={styles.card} onClick={() => product.supermarket ? router.push(`/store/${product.supermarket}/${product.name}`) : router.push(`${pathname}/${product.name}`)}>
+        <div
+            className={styles.card}
+            onClick={() => product.supermarketName ? 
+                router.push(`/store/${product.supermarketId}/${product.productId}`) 
+                : router.push(`${pathname}/${product.productId}`)}
+        >
             <div className={styles.imageContainer}>
                 <img
                     src={product.image}
@@ -29,25 +36,32 @@ export default function ProductCard({ product:product }) {
                     loading="lazy"
                     className={styles.image}
                 />
-                    <Link href="/search" onClick={(e) => e.stopPropagation()}>
+                    <Link
+                        href={product.supermarketName ? 
+                            `/store/${product.supermarketId}/${product.productId}?initial-comparation=true` 
+                            : `${pathname}/${product.productId}?initial-comparation=true`}
+                        onClick={(e) => e.stopPropagation()}>
+
                         <Button variant="contained" sx={buttonStyle}>
                             <SyncAltIcon/>
                         </Button> 
                     </Link>
             </div>
-            {product.supermarket ? (
+            {product.supermarketName ? (
                 <div className={styles.descriptionContainer}>
                     <div className={styles.upperDescription}>
+                    <Tooltip title={product.name} enterDelay={500} TransitionComponent={Zoom} placement="top" arrow>
                         <h4 className={styles.productName1}>{product.name}</h4>
+                    </Tooltip>
                     </div>
                     <div className={styles.lowerDescription}>
                         <Link 
-                            href={`/store/${product.supermarket}`}
+                            href={`/store/${product.supermarketId}`}
                             onClick={(e) => e.stopPropagation()}
                             className={styles.details}
                             style={{textDecoration: 'underline', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}
                         >
-                            {product.supermarket}
+                            {product.supermarketName}
                         </Link>
                         <h6 className={styles.details}>${product.price}</h6>
                     </div>
@@ -55,9 +69,12 @@ export default function ProductCard({ product:product }) {
             ) : (
                 <div className={styles.descriptionContainer}>
                     <div className={styles.upperDescription}>
-                        <h4 className={styles.productName2}>{product.name}</h4>
+                        <Tooltip title={product.name} enterDelay={500} TransitionComponent={Zoom} placement="top" arrow>
+                            <h4 className={styles.productName2}>{product.name}</h4>
+                        </Tooltip>
                         <h6 className={styles.details}>${product.price}</h6>
                     </div>
+                    <div className="swiper-lazy-preloader swiper-lazy-preloader-red"></div>
                 </div>
             )}
         </div>

@@ -23,6 +23,12 @@
 }
 
 @media(max-width: 800px) {
+    .leftContainer{
+        gap: 0.5em;
+    }
+    .rightContainer{
+        gap: 0.5em;
+    }
     .largeLogo {
         display: none;
     }

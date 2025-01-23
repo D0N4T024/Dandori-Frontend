@@ -29,8 +29,8 @@
 }
 
 .avatar {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
 }
 
 .button {
@@ -57,7 +57,7 @@
         justify-items: center;
         justify-content: space-between;
         row-gap: 55px;
-        max-height: 375px;
+        max-height: 390px;
         overflow: hidden;
         transition: max-height 0.3s ease-in-out;
     }

@@ -78,3 +78,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+@media(max-width: 632px) {
+    .image {
+        object-fit: contain;
+    }
+}

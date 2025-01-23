@@ -1,24 +1,16 @@
 'use client'
-
 import styles from './Navbar.module.css';
-import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ThemeSwitch from "./ThemeSwitch";
-import LightModeIcon from '@mui/icons-material/LightMode';
-import QrCode2Icon from '@mui/icons-material/QrCode2';
 import SignInButton from './SignInButton';
 import Searcher from './Searcher';
 import SearchModal from './SearchModal';
 import Link from 'next/link';
 import { useEffect } from "react";
 import Image from 'next/image';
-import { Skeleton } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
-import CustomizableModal from './CustomizableModal';
-import CodeScanner from './CodeScanner';
 import Zoom from '@mui/material/Zoom';
-
-
+import CodeScanner from './CodeScanner';
 import SimpleSidebar from './SimpleSidebar';
 
 export default function Navbar() {
@@ -38,10 +30,10 @@ export default function Navbar() {
     // Cleanup: eliminar el evento cuando el componente se desmonte
     return () => {
       window.removeEventListener("scroll", handleScroll); 
-    };v
+    };
   }, []);
 
-  return <nav>
+  return <nav id='main-nav'>
     <div className={styles.leftContainer}>
       <div className={styles.SidebarToggle}>
         <SimpleSidebar/>
@@ -65,9 +57,8 @@ export default function Navbar() {
       <Searcher/>
     </div>
     <div className={styles.rightContainer}>
-      <Skeleton variant="circular" width={40} height={40} className={styles.concealable}/>
+      {/* <Skeleton variant="circular" width={40} height={40} className={styles.concealable}/> */}
       <SearchModal/>
-      
       
         <div className={styles.concealable}>
           <ThemeSwitch/>
@@ -80,11 +71,14 @@ export default function Navbar() {
         </button> 
       </Tooltip> */}
       
-      <Tooltip title="Carrito" enterDelay={500} TransitionComponent={Zoom} arrow>
-        <Link href="/cart" className="iconButton">
-          <ShoppingCartIcon/>
-        </Link>
-      </Tooltip>
+      <div className={styles.largeLogo}>
+        <Tooltip title="Carrito" enterDelay={500} TransitionComponent={Zoom} arrow>
+          <Link href="/cart" className="iconButton">
+            <ShoppingCartIcon/>
+          </Link>
+        </Tooltip>
+      </div>
+      
       <SignInButton/>
     </div>
   </nav>

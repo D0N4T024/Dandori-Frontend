@@ -1,7 +1,8 @@
 .scanningContainer {
     display: flex;
     flex-direction: column;
-    gap: 1.5em
+    gap: 1.5em;
+    width: 600px;
 }
 
 .videoContainer {
@@ -44,17 +45,18 @@
   
 .dropdownMenu {
     position: absolute;
-    top: 100%;
+    bottom: 100%;
     left: 0;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    margin-top: 4px;
-    width: 100%;
+    margin-bottom: 4px;
+    width: auto;
+    min-width: 100%;
     z-index: 9999;
     box-shadow: 0 2px 8px rgba(128, 128, 128, 0.2);
     padding-block: 6px;
-    max-height: 200px;
+    max-height: 225px;
     overflow-y: auto;
 }
   
@@ -67,4 +69,10 @@
   
 .dropdownOption:hover {
     background-color: #f0f0f0;
+}
+
+@media(max-width: 720px) {
+    .scanningContainer {
+        width: 90vw;
+    }
 }
