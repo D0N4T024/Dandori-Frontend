@@ -9,10 +9,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-// import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
-// import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
+import { showToast } from "@/components/CustomizedSnackbars";
+import { signout } from '@/app/services/auth';
 
 const drawerWidth = 240;
 
@@ -28,6 +28,31 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const [user, setUser] = React.useState("");
+
+  React.useEffect(() => {
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser?.user || "");
+    }
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+        const response = await signout();
+        if (response.success) {
+            localStorage.removeItem('user');
+            window.location.href = "/";
+        } else {
+            showToast(response.message || 'Error al cerrar sesión.', 'error', 5000);
+        }
+    } catch (error) {
+        showToast(error.message, 'error', 5000);
+    }
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -59,10 +84,10 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
           sx={{ width: 36, height: 36 }}
-        />
+        >
+          {user ? user[0]?.toUpperCase() || "?" : "?"}
+        </Avatar>
         <Box sx={{ mr: 'auto', overflowX: 'hidden' }}>
           {/* <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
             Riley Carter
@@ -71,14 +96,14 @@ export default function SideMenu() {
             riley@email.comRiley.Carter@gmail.comRiley.Cart er@gmail.com
           </Typography> */}
           <Typography variant="body2" sx={{ fontWeight: 400, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              Riley.Carter@gmail.comRiley.Cart er@gmail.com
-            </Typography>
+            {user}
+          </Typography>
         </Box>
       </Stack>
       <Divider />
       <MenuContent />
       <Box sx={{ p: 1 }}>
-        <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+        <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />} onClick={handleSignOut}>
           Cerrar sesión
         </Button>
       </Box>

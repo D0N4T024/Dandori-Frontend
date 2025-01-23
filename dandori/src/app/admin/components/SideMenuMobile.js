@@ -7,13 +7,39 @@ import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
+import { showToast } from "@/components/CustomizedSnackbars";
+import { signout } from '@/app/services/auth';
 
 function SideMenuMobile({ open, toggleDrawer }) {
+  const [user, setUser] = React.useState("");
+
+  React.useEffect(() => {
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser?.user || "");
+    }
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+        const response = await signout();
+        if (response.success) {
+            localStorage.removeItem('user');
+            window.location.href = "/";
+        } else {
+            showToast(response.message || 'Error al cerrar sesión.', 'error', 5000);
+        }
+    } catch (error) {
+        showToast(error.message, 'error', 5000);
+    }
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -41,12 +67,12 @@ function SideMenuMobile({ open, toggleDrawer }) {
           >
             <Avatar
               sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
               sx={{ width: 24, height: 24 }}
-            />
+            >
+              {user ? user[0]?.toUpperCase() || "?" : "?"}
+            </Avatar>
             <Typography component="p" variant="h6" sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              Riley.Carter@gmail.comRiley.Cart er@gmail.com
+              {user}
             </Typography>
           </Stack>
         </Stack>
@@ -56,7 +82,7 @@ function SideMenuMobile({ open, toggleDrawer }) {
           <Divider />
         </Stack>
         <Stack sx={{ p: 2 }}>
-          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />} onClick={handleSignOut}>
             Cerrar sesión
           </Button>
         </Stack>

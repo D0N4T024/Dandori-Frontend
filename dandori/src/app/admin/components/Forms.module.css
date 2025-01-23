@@ -1,0 +1,54 @@
+.bodyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.centerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    width: 600px;
+}
+
+.titleContainer {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+}
+
+.fieldsContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(128, 128, 128, 0.2);
+    padding: 1.5em;
+    gap: 1em;
+}
+
+.titles {
+    font-family: var(--font-poppins);
+}
+
+.links{
+    font-weight: 500;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7em;
+}
+
+@media (max-width: 600px) {
+    .fieldsContainer {
+        background-color: rgba(128, 128, 128, 0);
+    }
+    .centerContainer {
+        gap: 0;
+        width: 100%;
+    }
+    .titleContainer {
+        padding-left: 1em;
+    }
+}
