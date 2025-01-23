@@ -1,8 +1,9 @@
 "use client";
 import { useForm, useController } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { styled } from "@mui/material/styles";
+import Loading from "@/app/(main)/loading"
 import Button from "@mui/material/Button";
 import TextFields from "@/components/TextFields";
 import stylesAuth from "@/app/auth/stylesAuth.module.css";
@@ -42,7 +43,7 @@ function ControllerField({ control, name, rules, ...props }) {
   return <TextFields {...field} errorMessage={error?.message} {...props} />;
 }
 
-export default function VerifyCode() {
+function VerifyCodeContent() {
   const { control, handleSubmit, reset, setValue, watch } = useForm();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -182,5 +183,13 @@ export default function VerifyCode() {
         
       </div>
     </div>
+  );
+}
+
+export default function VerifyCodePage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <VerifyCodeContent />
+    </Suspense>
   );
 }

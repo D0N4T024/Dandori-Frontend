@@ -1,9 +1,10 @@
 "use client";
 import { useForm, useController } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { verifyVerificationCode } from "@/app/services/auth";
 import { showToast } from "@/components/CustomizedSnackbars";
+import Loading from "@/app/(main)/loading"
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import TextFields from "@/components/TextFields";
@@ -42,18 +43,19 @@ function ControllerField({ control, name, rules, ...props }) {
   return <TextFields {...field} errorMessage={error?.message} {...props} />;
 }
 
-export default function VerifyCode() {
+function VerifyCodeContent() {
   const { control, handleSubmit, reset, setValue } = useForm();
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
   // Prellenar el campo de correo si se pasó como parámetro
-  useState(() => {
+  useEffect(() => {
     if (email) {
       setValue("email", email);
     }
   }, [email, setValue]);
+  
 
   const onSubmit = handleSubmit(async (data) => {
     const { email, code } = data;
@@ -139,3 +141,11 @@ export default function VerifyCode() {
     </div>
   );
 }
+
+export default function VerifyCode() {
+  return (
+      <Suspense fallback={<Loading />}>
+        <VerifyCodeContent />
+      </Suspense>
+    );
+  }
