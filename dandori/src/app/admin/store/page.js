@@ -8,20 +8,20 @@ import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CustomizedDataGrid from '../components/CustomizedDataGrid';
-import { getAllUserTypes } from '@/app/services/userType';
-import AddUserType from '../components/addForms/AddUserType'
-import UpdateUserType from '../components/updateForms/UpdateUserType'
+import { getAllSupermarkets } from '@/app/services/supermarket';
+import AddSupermarket from '../components/addForms/AddSupermarket'
+import UpdateSupermarket from '../components/updateForms/UpdateSupermarket'
 import DeleteItem from '../components/deleteForms/DeleteItem'
-import { deleteUserType } from '@/app/services/userType';
+import { deleteSupermarket } from "@/app/services/supermarket";
 
-export default function UserTypeManagement() {
+export default function StoreManagement() {
   const [action, setAction] = React.useState("read"); //create, read, update, delete
   const [selectedItem, setSelectedItem] = React.useState();
-  const [userTypesData, setUserTypesData] = React.useState([]);
+  const [supermarketsData, setSupermarketsData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const handleCRUD = () => { // Called after read, update, delete
-    fetchUserTypes(); // Re-fetch data when a supermarket is added
+    fetchSupermarkets(); // Re-fetch data when a supermarket is added
     setAction("read")
   }
 
@@ -35,33 +35,79 @@ export default function UserTypeManagement() {
     setAction("delete")
   }
 
-  const fetchUserTypes = async () => {
+  const fetchSupermarkets = async () => {
     try {
       setLoading(true)
-      const data = await getAllUserTypes(); // Llama al servicio para obtener los datos
-      setUserTypesData(
+      const data = await getAllSupermarkets(); // Llama al servicio para obtener los datos
+      setSupermarketsData(
         data.data.map((item) => ({
           id: item._id, // Asegúrate de que `item._id` sea único
           name: item.name,
+          description: item.description,
+          urlLogo: item.urlLogo,
+          urlPreviewLogo: item.urlPreviewLogo,
+          urlBusinessLogo: item.urlBusinessLogo,
+          website: item.website,
           isActive: item.isActive,
           createdAt: item.createdAt,
           updatedAt: item.updatedAt
         }))
       );
     } catch (error) {
-      console.error("Error fetching user types data:", error);
+      console.error("Error fetching supermarkets data:", error);
     } finally {
       setLoading(false); // Termina el estado de carga
     }
   };
 
   React.useEffect(() => {
-    fetchUserTypes();
+    fetchSupermarkets();
 }, []);
 
   const columnsConfig = [
     { field: "id", headerName: "Id", flex: 1},
     { field: "name", headerName: "Nombre", flex: 1},
+    {
+      field: "urlLogo",
+      headerName: "Logo",
+      flex: 1,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">
+          {params.value}
+        </a>
+      ),
+    },
+    {
+      field: "urlPreviewLogo",
+      headerName: "Logo de vista previa",
+      flex: 1,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">
+          {params.value}
+        </a>
+      ),
+    },
+    {
+      field: "urlBusinessLogo",
+      headerName: "Logo de negocio",
+      flex: 1,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">
+          {params.value}
+        </a>
+      ),
+    },
+    { field: "description", headerName: "Descripción", flex: 2},
+    {
+      field: "website",
+      headerName: "Sitio web",
+      flex: 1,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">
+          {params.value}
+        </a>
+      ),
+    },
     {
       field: "isActive",
       headerName: "Estado",
@@ -113,7 +159,7 @@ export default function UserTypeManagement() {
         }}
         spacing={2}
       >
-        <h3 style={{ textAlign: "center" }}>{action == "read" && "Tipos de usuario"}</h3>
+        <h3 style={{ textAlign: "center" }}>{action == "read" && "Tiendas"}</h3>
         { action == "read" ? (
           <Button
             variant="contained"
@@ -138,15 +184,15 @@ export default function UserTypeManagement() {
       </Stack>
 
       { action == "create" ? (
-        <AddUserType onUserTypeAdded={handleCRUD}/>
+        <AddSupermarket onSupermarketAdded={handleCRUD}/>
       ) : action == "update" ? (
-        <UpdateUserType onUserTypeUpdated={handleCRUD} row={selectedItem}/>
+        <UpdateSupermarket onSupermarketUpdated={handleCRUD} row={selectedItem}/>
       ) : action == "delete" ? (
-        <DeleteItem onItemDeleted={handleCRUD} id={selectedItem} deleteService={deleteUserType} title="Eliminar tipo de usuario"/>
+        <DeleteItem onItemDeleted={handleCRUD} id={selectedItem} title="Eliminar tienda" deleteService={deleteSupermarket}/>
       ) : (
         <Grid size={{ xs: 12, lg: 9 }}>
           <CustomizedDataGrid
-            rows={userTypesData}
+            rows={supermarketsData}
             columnsConfig={columnsConfig}
             UpdateForm={ChangeToUpdateForm}
             DeleteForm={ChangeToDeleteForm}

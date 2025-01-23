@@ -8,20 +8,20 @@ import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CustomizedDataGrid from '../components/CustomizedDataGrid';
-import { getAllUserTypes } from '@/app/services/userType';
-import AddUserType from '../components/addForms/AddUserType'
-import UpdateUserType from '../components/updateForms/UpdateUserType'
+import { getAllUsers } from '@/app/services/user';
+import AddUser from '../components/addForms/AddUser'
+import UpdateUser from '../components/updateForms/UpdateUser'
 import DeleteItem from '../components/deleteForms/DeleteItem'
-import { deleteUserType } from '@/app/services/userType';
+import { deleteUser } from '@/app/services/user';
 
-export default function UserTypeManagement() {
+export default function UserManagement() {
   const [action, setAction] = React.useState("read"); //create, read, update, delete
   const [selectedItem, setSelectedItem] = React.useState();
-  const [userTypesData, setUserTypesData] = React.useState([]);
+  const [usersData, setUsersData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const handleCRUD = () => { // Called after read, update, delete
-    fetchUserTypes(); // Re-fetch data when a supermarket is added
+    fetchUsers(); // Re-fetch data when a supermarket is added
     setAction("read")
   }
 
@@ -35,33 +35,59 @@ export default function UserTypeManagement() {
     setAction("delete")
   }
 
-  const fetchUserTypes = async () => {
+  const fetchUsers = async () => {
     try {
       setLoading(true)
-      const data = await getAllUserTypes(); // Llama al servicio para obtener los datos
-      setUserTypesData(
+      const data = await getAllUsers(); // Llama al servicio para obtener los datos
+      setUsersData(
         data.data.map((item) => ({
           id: item._id, // Asegúrate de que `item._id` sea único
           name: item.name,
+          email: item.email,
+          verified: item.verified,
+          isAdmin: item.isAdmin,
           isActive: item.isActive,
+          userTypeId: item.userTypeId,
           createdAt: item.createdAt,
-          updatedAt: item.updatedAt
+          updatedAt: item.updatedAt,
         }))
       );
     } catch (error) {
-      console.error("Error fetching user types data:", error);
+      console.error("Error fetching users data:", error);
     } finally {
       setLoading(false); // Termina el estado de carga
     }
   };
 
   React.useEffect(() => {
-    fetchUserTypes();
+    fetchUsers();
 }, []);
 
   const columnsConfig = [
     { field: "id", headerName: "Id", flex: 1},
     { field: "name", headerName: "Nombre", flex: 1},
+    { field: "email", headerName: "Correo electrónico", flex: 2},
+    {
+      field: "verified",
+      headerName: "Verificado",
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ color: params.value ? "green" : "red" }}>
+          {params.value ? "Si" : "No"}
+        </span>
+      ),
+    },
+    {
+      field: "isAdmin",
+      headerName: "Administrador",
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ color: params.value ? "green" : "red" }}>
+          {params.value ? "Si" : "No"}
+        </span>
+      ),
+    },
+    { field: "userTypeId", headerName: "Id tipo de usuario", flex: 1},
     {
       field: "isActive",
       headerName: "Estado",
@@ -113,7 +139,7 @@ export default function UserTypeManagement() {
         }}
         spacing={2}
       >
-        <h3 style={{ textAlign: "center" }}>{action == "read" && "Tipos de usuario"}</h3>
+        <h3 style={{ textAlign: "center" }}>{action == "read" && "Usuarios"}</h3>
         { action == "read" ? (
           <Button
             variant="contained"
@@ -138,15 +164,15 @@ export default function UserTypeManagement() {
       </Stack>
 
       { action == "create" ? (
-        <AddUserType onUserTypeAdded={handleCRUD}/>
+        <AddUser onUserAdded={handleCRUD}/>
       ) : action == "update" ? (
-        <UpdateUserType onUserTypeUpdated={handleCRUD} row={selectedItem}/>
+        <UpdateUser onUserUpdated={handleCRUD} row={selectedItem}/>
       ) : action == "delete" ? (
-        <DeleteItem onItemDeleted={handleCRUD} id={selectedItem} deleteService={deleteUserType} title="Eliminar tipo de usuario"/>
+        <DeleteItem onItemDeleted={handleCRUD} id={selectedItem} deleteService={deleteUser} title="Eliminar usuario"/>
       ) : (
         <Grid size={{ xs: 12, lg: 9 }}>
           <CustomizedDataGrid
-            rows={userTypesData}
+            rows={usersData}
             columnsConfig={columnsConfig}
             UpdateForm={ChangeToUpdateForm}
             DeleteForm={ChangeToDeleteForm}
