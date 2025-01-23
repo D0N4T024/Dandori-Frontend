@@ -4,16 +4,19 @@ import Image from "next/image"
 import stylesAuth from "../stylesAuth.module.css"
 import styles from "./signUp.module.css"
 import ThemeSwitch from "@/components/ThemeSwitch"
+import { useState } from "react"
 import { useForm, useController } from "react-hook-form";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LockIcon from '@mui/icons-material/Lock';
 import TextFields from "@/components/TextFields"
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { purple } from '@mui/material/colors';
 import CustomizableModal from "@/components/CustomizableModal"
 import TermsAndConditions from "@/components/TermsAndConditions"
+import { signup, sendVerificationCode } from '@/app/services/auth';
+import { useRouter } from 'next/navigation'
+import { showToast } from "@/components/CustomizedSnackbars";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GradientButton = styled(Button)({
     background: "linear-gradient(to right, #54DEA7, #FF9F1C)",
@@ -46,13 +49,45 @@ function ControllerField({ control, name, rules, ...props }) {
 }
 
 function SignUp(){
-    const { control, register, handleSubmit, formState:{errors}, reset, watch } = useForm();
+    const { control, handleSubmit, formState:{errors}, reset, watch } = useForm();
 
-    const onSubmit = handleSubmit((data) => {
-        alert("Registro exitoso")
-        console.log(data);
-        reset
-    })
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    const onSubmit = handleSubmit(async (data) => {
+        const { email, password } = data;
+    
+        try {
+            setLoading(true)
+            // Paso 1: Registro
+            const signupResponse = await signup(email, password);
+            if (!signupResponse.success) {
+                console.log("Registrar fallo: ", signupResponse.message)
+                showToast(signupResponse.message, "error");
+                setLoading(false)
+                return;
+            }
+    
+            // Paso 2: Enviar código de verificación
+            const sendCodeResponse = await sendVerificationCode( email );
+            if (!sendCodeResponse.success) {
+                console.log("Enviar codigo fallo: ", sendCodeResponse.message)
+                showToast(sendCodeResponse.message, "error");
+                setLoading(false)
+                return;
+            }
+            showToast("Código de verificación enviado", "info", 5000);
+            // Redirigir verificar codigo
+            setLoading(false)
+            router.push(`/auth/signUp/verificateCode?email=${encodeURIComponent(email)}`);
+            reset();
+        } catch (error) {
+            showToast("Ocurrió un error inesperado", "error", 5000);
+            setLoading(false)
+            console.error(error);
+        }
+    });
+    
 
     return <div className={stylesAuth.mainContainer}>
         <div className={`${styles.imageContainer} ${stylesAuth.responsiveContainer}`}>
@@ -145,8 +180,10 @@ function SignUp(){
                             }}
                         />
                     </div>
-                    <GradientButton type="submit" disableRipple>
-                        <h4 className={stylesAuth.buttonTitle}>Registrarse</h4>
+                    <GradientButton type="submit" disableRipple disabled={loading}>
+                        {loading
+                            ? <CircularProgress sx={{ color:"#d6fce6" }} size="30px"/>
+                            : <h4 className={stylesAuth.buttonTitle}>Confirmar</h4>}
                     </GradientButton>
 
                 </form>

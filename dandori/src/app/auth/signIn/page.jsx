@@ -4,6 +4,7 @@ import Image from "next/image"
 import stylesAuth from "../stylesAuth.module.css"
 import styles from "./signIn.module.css"
 import ThemeSwitch from "@/components/ThemeSwitch"
+import { useState } from "react"
 import { useForm, useController } from "react-hook-form";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LockIcon from '@mui/icons-material/Lock';
@@ -12,6 +13,10 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CustomizableModal from "@/components/CustomizableModal"
 import TermsAndConditions from "@/components/TermsAndConditions"
+import { showToast } from "@/components/CustomizedSnackbars";
+import { signin } from "@/app/services/auth"
+import { decodeJwt } from "jose"
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GradientButton = styled(Button)(({theme})=>({
     background: "linear-gradient(to right, #F71735, #FF9F1C)", // Gradiente de fondo
@@ -45,13 +50,31 @@ function ControllerField({ control, name, rules, ...props }) {
 }
 
 function SignIn(){
-    const { control, register, handleSubmit, formState:{errors}, reset, watch } = useForm();
+    const { control, handleSubmit, formState:{errors}, reset } = useForm();
+    const [loading, setLoading] = useState(false);
 
-    const onSubmit = handleSubmit((data) => {
-        alert("Inicio de sesion exitoso")
-        console.log(data);
-        reset
-    })
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            setLoading(true);
+            const response = await signin(data.email, data.password);
+            if (response.success) {
+                const { userId, isAdmin, verified, exp } = decodeJwt(response.token)
+                localStorage.setItem(
+                    'user', 
+                    JSON.stringify({registryDate: response.registryDate, user: response.user, userId: userId, isAdmin: isAdmin, verified: verified, exp: exp})
+                )
+                reset();
+                setLoading(false);
+                window.location.href = "/";
+            } else {
+                setLoading(false);
+                showToast(response.message || "Error al iniciar sesión", "error", 5000);
+            }
+        } catch (error) {
+            setLoading(false);
+            showToast("Error al iniciar sesión. Verifica tus credenciales.", "error", 5000);
+        }
+    });
 
     return <div className={stylesAuth.mainContainer}>
         <div className={`${styles.imageContainer} ${stylesAuth.responsiveContainer}`}>
@@ -125,8 +148,10 @@ function SignIn(){
                             }}
                         />
                     </div>
-                    <GradientButton type="submit" disableRipple>
-                        <h4 className={stylesAuth.buttonTitle}>Iniciar sesión</h4>
+                    <GradientButton type="submit" disableRipple disabled={loading}>
+                        {loading
+                            ? <CircularProgress sx={{ color:"#fcbac1" }} size="30px"/>
+                            : <h4 className={stylesAuth.buttonTitle}>Confirmar</h4>}
                     </GradientButton>
 
                 </form>
@@ -135,9 +160,6 @@ function SignIn(){
                     <p className={stylesAuth.actionDescription}>Olvidaste tu contraseña? <Link href="/auth/forgotPassword" className={styles.links}>Restablécela</Link></p>
                     <p className={stylesAuth.actionDescription}>No tienes cuenta? <Link href="/auth/signUp" className={styles.links}>Crea una cuenta</Link></p>
                 </div>
-                
-
-
             </div>
         </div>
     </div>
