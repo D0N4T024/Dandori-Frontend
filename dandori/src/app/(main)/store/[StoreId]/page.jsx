@@ -1,136 +1,140 @@
-import Image from 'next/image'
+'use client'
+import { useState, useEffect, Suspense, lazy } from 'react'
 import styles from './store.module.css'
-import ProductCard from '@/components/ProductCard'
-import Carousel from '@/components/Carousel'
+const LazyCarousel = lazy(() => import('@/components/Carousel'))
+import { getSupermarketById } from '@/app/services/supermarket'
+import { getProductBySupermarket } from '@/app/services/product'
+import Loading from '../../loading'
+import { useRouter } from 'next/navigation'
+import { Skeleton } from '@mui/material'
 
 export default function Store({ params }) {
-    //JSON de ejemplo
-    const store = {
-        name: "Bravo",
-        frontImage: "https://3.bp.blogspot.com/-_2LlFQTssfo/XBFcDhPQXNI/AAAAAAABNVM/RpXBAfDkXd8nnK3cFhHrSS_6yFGOj-MzACLcBGAs/s1600/Bravo1.jpg",
-        logo: "https://idmphsmkuxkn.compat.objectstorage.us-ashburn-1.oraclecloud.com/cdn-bucket/uploads/2022/10/sirena-logo2-300x178.jpeg",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        categories: [
-            {
-                name: "Lacteos",
-                products: [
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                    {
-                        name: "Leche - 500ml",
-                        image: "https://th.bing.com/th/id/R.56056a9b9f59e5054a147ee2a4c7f86b?rik=PZv4xJ9ciBLoxg&pid=ImgRaw&r=0",
-                        price: 85,
-                    },
-                ],
-            },
-            {
-                name: "Carnes y Pescados",
-                products: [
-                    { name: "Pechuga de Pollo - 1kg", image: "https://th.bing.com/th/id/R.47f2d34796659508feae255eb81ee4bd?rik=AytqSk%2fZzyrt1Q&riu=http%3a%2f%2flivingandtravel.com.mx%2fwp-content%2fuploads%2f2017%2f11%2fcarne-asada-comida.jpg&ehk=wie4uCkRMjDC6VnXHZtDPNWpM09zkMb169csNO8OUn8%3d&risl=&pid=ImgRaw&r=0", price: 250 },
-                    { name: "Carne Molida de Res - 500g", image: "https://th.bing.com/th/id/R.47f2d34796659508feae255eb81ee4bd?rik=AytqSk%2fZzyrt1Q&riu=http%3a%2f%2flivingandtravel.com.mx%2fwp-content%2fuploads%2f2017%2f11%2fcarne-asada-comida.jpg&ehk=wie4uCkRMjDC6VnXHZtDPNWpM09zkMb169csNO8OUn8%3d&risl=&pid=ImgRaw&r=0", price: 180 },
-                    { name: "Filete de Salmón - 200g", image: "https://th.bing.com/th/id/R.47f2d34796659508feae255eb81ee4bd?rik=AytqSk%2fZzyrt1Q&riu=http%3a%2f%2flivingandtravel.com.mx%2fwp-content%2fuploads%2f2017%2f11%2fcarne-asada-comida.jpg&ehk=wie4uCkRMjDC6VnXHZtDPNWpM09zkMb169csNO8OUn8%3d&risl=&pid=ImgRaw&r=0", price: 300 },
-                    { name: "Camarones - 1kg", image: "https://th.bing.com/th/id/R.47f2d34796659508feae255eb81ee4bd?rik=AytqSk%2fZzyrt1Q&riu=http%3a%2f%2flivingandtravel.com.mx%2fwp-content%2fuploads%2f2017%2f11%2fcarne-asada-comida.jpg&ehk=wie4uCkRMjDC6VnXHZtDPNWpM09zkMb169csNO8OUn8%3d&risl=&pid=ImgRaw&r=0", price: 750 }
-                ]
-            },
-            {
-                name: "Frutas y Vegetales",
-                products: [
-                    { name: "Manzana Roja - 1kg", image: "https://th.bing.com/th/id/R.4b2a3910f26fde02d084e8e43e962c4b?rik=xqdwwzFAE1n9GQ&riu=http%3a%2f%2fmedia-cache-ak0.pinimg.com%2f1200x%2f74%2f20%2f93%2f742093b4cd90c9746616601a74c60593.jpg&ehk=Me5BxlzOJSTnYMgUeD7QXpmK10cWLOCW3IjAqhCIp68%3d&risl=&pid=ImgRaw&r=0", price: 120 },
-                    { name: "Banana - Docena", image: "https://th.bing.com/th/id/R.4b2a3910f26fde02d084e8e43e962c4b?rik=xqdwwzFAE1n9GQ&riu=http%3a%2f%2fmedia-cache-ak0.pinimg.com%2f1200x%2f74%2f20%2f93%2f742093b4cd90c9746616601a74c60593.jpg&ehk=Me5BxlzOJSTnYMgUeD7QXpmK10cWLOCW3IjAqhCIp68%3d&risl=&pid=ImgRaw&r=0", price: 60 },
-                    { name: "Papa - 1kg", image: "https://th.bing.com/th/id/R.4b2a3910f26fde02d084e8e43e962c4b?rik=xqdwwzFAE1n9GQ&riu=http%3a%2f%2fmedia-cache-ak0.pinimg.com%2f1200x%2f74%2f20%2f93%2f742093b4cd90c9746616601a74c60593.jpg&ehk=Me5BxlzOJSTnYMgUeD7QXpmK10cWLOCW3IjAqhCIp68%3d&risl=&pid=ImgRaw&r=0", price: 80 },
-                    { name: "Lechuga Romana - Unidad", image: "https://th.bing.com/th/id/R.4b2a3910f26fde02d084e8e43e962c4b?rik=xqdwwzFAE1n9GQ&riu=http%3a%2f%2fmedia-cache-ak0.pinimg.com%2f1200x%2f74%2f20%2f93%2f742093b4cd90c9746616601a74c60593.jpg&ehk=Me5BxlzOJSTnYMgUeD7QXpmK10cWLOCW3IjAqhCIp68%3d&risl=&pid=ImgRaw&r=0", price: 45 }
-                ]
-            },
-            {
-                name: "Bebidas",
-                products: [
-                    { name: "Agua Embotellada - 1.5L", image: "https://www.losvinos.com.ar/wp-content/uploads/2019/10/Bebidas-Alcoholicas.jpg", price: 30 },
-                    { name: "Jugo de Naranja - 1L", image: "https://www.losvinos.com.ar/wp-content/uploads/2019/10/Bebidas-Alcoholicas.jpg", price: 80 },
-                    { name: "Vino Tinto - 750ml", image: "https://www.losvinos.com.ar/wp-content/uploads/2019/10/Bebidas-Alcoholicas.jpg", price: 450 },
-                    { name: "Cerveza - 6 Pack", image: "https://www.losvinos.com.ar/wp-content/uploads/2019/10/Bebidas-Alcoholicas.jpg", price: 250 }
-                ]
-            },
-            {
-                name: "Panadería y Repostería",
-                products: [
-                    { name: "Baguette", image: "https://d100mj7v0l85u5.cloudfront.net/s3fs-public/WhatsApp-Image-2021-10-22-at-3.04.14-PM.jpeg", price: 80 },
-                    { name: "Croissant", image: "https://d100mj7v0l85u5.cloudfront.net/s3fs-public/WhatsApp-Image-2021-10-22-at-3.04.14-PM.jpeg", price: 300 },
-                    { name: "Pastel de Chocolate", image: "https://d100mj7v0l85u5.cloudfront.net/s3fs-public/WhatsApp-Image-2021-10-22-at-3.04.14-PM.jpeg", price: 500 },
-                    
-                ]
+
+    const [supermarket, setSupermarket] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [loadingSupermarket, setLoadingSupermarket] = useState(true);
+    const [loadingCategories, setLoadingCategories] = useState(true);
+    const [errorSupermarket, setErrorSupermarket] = useState(null);
+    const [errorCategories, setErrorCategories] = useState(null);
+
+    if (loadingCategories == false) {
+        console.log("Cargo producto: ", categories[0].products[0].name)
+    }
+
+    const router = useRouter();
+
+    useEffect(() => {
+        // Fetch supermarket details
+        const fetchSupermarketDetails = async () => {
+            try {
+                setLoadingSupermarket(true);
+                const response = await getSupermarketById(params.StoreId);
+
+                if (response.success && response.data) {
+                    setSupermarket(response.data);
+                    console.log("fetchSupermarketDetails: ", response.data)
+                } else {
+                    setErrorSupermarket('Supermarket details not found.');
+                }
+            } catch (err) {
+                setErrorSupermarket(err.message || 'Failed to fetch supermarket details.');
+            } finally {
+                setLoadingSupermarket(false);
             }
-        ]
+        };
+
+        // Fetch categories and products
+        const fetchCategories = async () => {
+            try {
+                setLoadingCategories(true);
+                const response = await getProductBySupermarket(params.StoreId);
+
+                if (response.success && response.data.length > 0) {
+                    // const supermarketData = response.data[0];
+                    //Verifico si llegaron los datos
+                    console.log("probanndo: ", response.data[0].categories)
+                    await waitForCategories(response.data[0].categories);
+
+                    setCategories(response.data[0].categories);
+                    console.log("fetchCategories: ", response.data[0].categories)
+                } else {
+                    setErrorCategories('Categories and products not found.');
+                }
+            } catch (err) {
+                setErrorCategories(err.message || 'Failed to fetch categories and products.');
+            } finally {
+                setLoadingCategories(false);
+            }
+        };
+
+        fetchSupermarketDetails();
+        fetchCategories();
+    }, [params.storeId]);
+
+    const waitForCategories = async (categories) => {
+        while (!categories[0].products[0].name || categories[0].products.length === 0) {
+            console.log("Waiting for categories...");
+            await new Promise((resolve) => setTimeout(resolve, 100)); // Esperar 100 ms
+        }
+    };
+
+    const LoadingSkeleton = () => {
+        return(
+            <div style={{ width: "100%", paddingInline: "2em"}}>
+                <Skeleton variant="text" sx={{ fontSize: '2rem', width: "200px" }} />
+                <Skeleton variant="rounded" height={280}/>
+            </div>
+        )
+    }
+
+    if (loadingSupermarket) {
+        return <Loading />;
+    }
+
+    if (errorSupermarket || !supermarket) {
+        router.push("/404")
     }
 
     return(
         <div className={styles.mainContainer}>
             <img
-                src={store.frontImage}
+                src={supermarket.urlPreviewLogo}
                 className={styles.frontImage}
             />
             <div className={styles.detailsContainer}>
                 <img
-                    src={store.logo}
+                    src={supermarket.urlLogo}
+                    alt={supermarket.name}
                     width="30%"
                     className={styles.logo}
                     />
                 <div className={styles.textContainer}>
-                    <h3>Supermercado {store.name}</h3>
-                    <p style={{ fontWeight: "300" }}>{store.description}</p>
+                    <h3>Supermercado {supermarket.name}</h3>
+                    <p style={{ fontWeight: "300" }}>{supermarket.description}</p>
                 </div>
             </div>
 
-            <div className={styles.categories}>
-                {store.categories.map((category, index)=>(
-                    <div key={index}>
-                        <h3 className={styles.categoriesTitles}>{category.name}</h3>
-                        <Carousel products={category.products} carouselId={`carousel-${index}`} />
-                    </div>
+            { loadingCategories ?
+            (
+                <div className={styles.categories}>
+                    <LoadingSkeleton />
+                    <LoadingSkeleton />
+                </div>
+            ) :
+            (<div className={styles.categories}>
+                { categories.map((category, index)=>(
+                    <Suspense
+                        key={index}
+                        fallback={<LoadingSkeleton />}
+                    >
+                        <div key={index}>
+                            <h3 className={styles.categoriesTitles}>{category.categoryName}</h3>
+                            <LazyCarousel products={category.products} carouselId={`carousel-${index}`} />
+                        </div>
+                    </Suspense>
+                    
                 ))}
-            </div>
+            </div>)}
         </div>
     )
 }

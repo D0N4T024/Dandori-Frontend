@@ -1,8 +1,8 @@
+'use server'
 import Image from "next/image";
 import styles from "./page.module.css";
 import Categories from "@/components/Categories";
 import HowWorks from "@/components/HowWorks";
-import CustomizableModal from "@/components/CustomizableModal";
 
 //Json de ejemplo
 const categories = [
@@ -44,7 +44,15 @@ const categories = [
   {id: 36, title: "Cereal", image: "https://s1.eestatic.com/2018/11/06/ciencia/nutricion/Cereales-Nutricion-Alimentacion-Nutricion_351228002_104730645_1706x1706.jpg"},
 ]
 
-export default function Home() {
+export default async function Home() {
+  try{
+    const res = await fetch("http://localhost:8000/api/supermarkets/getAll")
+    const supermarkets = res.json()
+    console.log(supermarkets)
+  }
+  catch{
+    console.log("Hubo un error")
+  }
 
   return (
     <main className={styles.main}>
@@ -63,10 +71,33 @@ export default function Home() {
         />
       </div>
 
+      {/* <div>
+        {
+          game.map((gam)=>(
+            <div key={gam.id}>
+              <h4>{gam.title}</h4>
+            </div>
+          ))
+        }
+      </div> */}
+
       <div className={styles.categoriesContainer}>
         <h3>Categorias de comida</h3>
+        {/* <Categories categories={categories}/> */}
         <Categories categories={categories}/>
       </div>
+      {/* <Probando mostrar={true}/> */}
     </main>
   );
 }
+
+// export const getServerSideProps = async (context) => {
+//   const res = await fetch("https://www.freetogame.com/api/games")
+//   const games = await res.json()
+
+//   return{
+//     props: {
+//       game : games
+//     }
+//   }
+// }

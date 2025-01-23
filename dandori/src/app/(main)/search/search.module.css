@@ -7,6 +7,7 @@
     justify-content: stretch;
     gap: 1.5em;
     overflow-y: hidden;
+    flex-grow: 1;
 }
 
 .foundProducts {
@@ -17,6 +18,15 @@
     justify-content: end;
     gap: 1.5em;
     transition: max-height 0.3s ease-in-out;
+}
+
+.notFound {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+
 }
 
 @media (max-width: 990px){

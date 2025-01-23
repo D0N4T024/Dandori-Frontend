@@ -3,16 +3,15 @@ import Link from "next/link"
 import Image from "next/image"
 import styles from "./forgotPassword.module.css"
 import stylesAuth from "../stylesAuth.module.css"
-
-
 import ThemeSwitch from "@/components/ThemeSwitch"
 import { useForm, useController } from "react-hook-form";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import LockIcon from '@mui/icons-material/Lock';
 import TextFields from "@/components/TextFields"
-
+import { useRouter } from 'next/navigation'
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { sendForgotPasswordCode } from "@/app/services/auth"
+import { showToast } from "@/components/CustomizedSnackbars";
 
 const GradientButton = styled(Button)({
     background: "linear-gradient(to right, #F71735, #FF9F1C)", // Gradiente de fondo
@@ -46,13 +45,29 @@ function ControllerField({ control, name, rules, ...props }) {
 }
 
 function SignIn(){
-    const { control, register, handleSubmit, formState:{errors}, reset, watch } = useForm();
+    const { control, handleSubmit, formState:{errors}, reset } = useForm();
+    const router = useRouter();
 
-    const onSubmit = handleSubmit((data) => {
-        alert("Recuperacion de cuenta empezado")
-        console.log(data);
-        reset
-    })
+    const onSubmit = handleSubmit(async (data) => {
+        const { email } = data;
+    
+        try {
+            // Enviar código de verificación
+            const sendCodeResponse = await sendForgotPasswordCode( email );
+            if (!sendCodeResponse.success) {
+                console.log("Enviar codigo fallo: ", sendCodeResponse.message)
+                showToast(sendCodeResponse.message, "error");
+                return;
+            }
+            showToast("Código de recuperación enviado", "info", 5000);
+            // Redirigir verificar codigo
+            router.push(`/auth/forgotPassword/verificateCode?email=${encodeURIComponent(email)}`);
+            reset();
+        } catch (error) {
+            showToast(error, "error", 5000);
+            console.error(error);
+        }
+    });
 
     return <div className={stylesAuth.mainContainer}>
         <div className={`${styles.imageContainer} ${stylesAuth.responsiveContainer}`}>
@@ -97,51 +112,6 @@ function SignIn(){
                                     value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                                     message: "Correo inválido",
                                 },
-                            }}
-                        />
-                    </div>
-                    
-                    <div className={stylesAuth.field}> {/*Password fields*/}
-                        <label htmlFor="password"><b>Contraseña</b></label>
-                        <ControllerField
-                            control={control}
-                            name="password"
-                            type="password"
-                            placeholder="Password123#"
-                            bgcolor="#fcbac1"
-                            icon={LockIcon}
-                            rules={{
-                                required: {
-                                    value: true,
-                                    message: "La contraseña es requerida",
-                                },
-                                minLength: {
-                                    value: 6,
-                                    message: "La contraseña tiene que tener más de 6 dígitos",
-                                },
-                                pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{6,}$/, // Todos los patrones combinados
-                                    message: "La contraseña debe de contener al menos una minúscula, mayúscula, número y simbolo",
-                                },
-                            }}
-                        />
-                    </div>
-
-                    <div className={stylesAuth.field}> {/*Password confirmation fields*/}
-                        <label htmlFor="passwordConfirmation"><b>Confirmar Contraseña</b></label>
-                        <ControllerField
-                            control={control}
-                            name="passwordConfirmation"
-                            type="password"
-                            placeholder="Password123#"
-                            bgcolor="#fcbac1"
-                            icon={LockIcon}
-                            rules={{
-                                required: {
-                                    value: true,
-                                    message: "Password confirmation is required",
-                                },
-                                validate: (value) => value === watch("password") || "Passwords must match",
                             }}
                         />
                     </div>

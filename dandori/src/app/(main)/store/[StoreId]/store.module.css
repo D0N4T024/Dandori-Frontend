@@ -24,6 +24,7 @@
 
 .logo {
     border-radius: 10px;
+    max-height: 300px;
 }
 
 .textContainer {
@@ -60,5 +61,8 @@
     }
     .textContainer{
         text-align: center;
+    }
+    .logo {
+        width: 45%;
     }
 }

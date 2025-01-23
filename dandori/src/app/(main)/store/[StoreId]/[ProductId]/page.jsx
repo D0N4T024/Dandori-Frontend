@@ -6,87 +6,164 @@ import AdjustableDropdown from "@/components/AdjustableDropdown"
 import NutritionData from "@/components/NutritionData"
 import CostTrendChart from "@/components/CostTrendChart"
 import ProductComparing from "@/components/ProductComparing"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getProductDetails, getProductDetailsByScannedCode } from "@/app/services/product"
+import { showToast } from "@/components/CustomizedSnackbars";
+import { useRouter } from "next/navigation"
+import Loading from "@/app/(main)/loading"
+import { addProductToShoppingList } from "@/app/services/shoppingList"
 
-const product = {
-    name: "Barra proteica - Natural Valley",
-    image: "https://i.pinimg.com/originals/57/73/33/5773334ef57bc97b2c0836b2183ead9b.png",
-    supermarket: "La Sirena",
-    supermarketLogo: "https://th.bing.com/th/id/OIP.2zX3Z-V5CHLIZQaOLXAuEAHaET?rs=1&pid=ImgDetMain",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    nutritionData: [
-        { label: 'Energía', value: '221,15 kcal' },
-        { label: 'Proteínas', value: '15,13 g' },
-        { label: 'Carbohidratos', value: '18,40 g' },
-        { label: 'Fibra Alimentar', value: '5,83 g', subItem: true },
-        { label: 'Azúcar', value: '4,88 g', subItem: true },
-        { label: 'Gorduras Totais', value: '5,18 g' },
-        { label: 'Gorduras Saturadas', value: '0,86 g', subItem: true },
-        { label: 'Gorduras Trans', value: '0 g', subItem: true },
-        { label: 'Colesterol', value: '0 mg' },
-        { label: 'Sódio', value: '243,03 mg' },
-        { label: 'Potássio', value: '291,85 mg' },
-        { label: 'Cálcio', value: '49,02 mg' },
-        { label: 'Ferro', value: '2,91 mg' },
-        { label: 'Magnésio', value: '48,23 mg' },
-        { label: 'Vitamina C', value: '29,49 mg' },
-        { label: 'Vitamina D', value: '24,88 mg' },
-        { label: 'Vitamina B6', value: '32,40 mg' },
-    ],
-    tendency: [
-        { date: '25 Julio', cost: 120 },
-        { date: '26 Julio', cost: 125 },
-        { date: '27 Julio', cost: 122 },
-        { date: '28 Julio', cost: 130 },
-        { date: '29 Julio', cost: 122.45 },
-        { date: '30 Julio', cost: 135 },
-        { date: '31 Julio', cost: 139.9 },
-    ]
-}
-
-export default function Product() {
-    const [quantity1, setQuantity1] = useState();
+export default function Product({ searchParams }) {
+    const [quantity, setQuantity] = useState(1);
     const options = [...Array(99).keys()].map(i => i + 1);
+
+    const [productDetails, setProductDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const router = useRouter();
+
+    const [storeId, setStoreId] = useState(null);
+    const [productId, setProductId] = useState(null);
+    const [isScannedCode, setIsScannedCode] = useState(false);
+    const [isInitialComparation, setIsInitialComparation] = useState(false);
+
+    let params = { ...searchParams };
+    const search = params.query;
+
+    useEffect(() => {
+        // Check if 'scanned-code' exists and its value is truthy
+        if (searchParams && searchParams['scanned-code']) {
+            const scannedCodeValue = searchParams['scanned-code'];
+            console.log("Scanned Code:", scannedCodeValue);
+            
+
+            if (scannedCodeValue === "true") {
+                console.log("The scanned-code parameter is true!");
+                setIsScannedCode(true);
+            } else {
+                console.log("The scanned-code parameter exists but is not true.");
+            }
+        } else {
+            console.log("The scanned-code parameter is missing or falsy.");
+        }
+
+        // Check if 'initial-comparation' exists and its value is truthy
+        if (searchParams && searchParams['initial-comparation']) {
+            const initialComparation = searchParams['initial-comparation'];
+            console.log("initialComparation:", initialComparation);
+            
+            if (initialComparation === "true") {
+                console.log("The initial-comparation is true!");
+                setIsInitialComparation(true);
+            } else {
+                console.log("The initial-comparation exists but is not true.");
+            }
+        } else {
+            console.log("TThe initial-comparation parameter is missing or falsy.");
+        }
+        
+        // Extract the path segments to get the IDs
+        const pathname = router.asPath || window.location.pathname; // Obtener ruta
+        const pathSegments = pathname.split('/');
+        const extractedProductId = pathSegments[pathSegments.length - 1]; // Obtener 'productId'
+        const extractedStoreId = pathSegments[pathSegments.length - 2]; // Obtener 'storeId'
+
+        setStoreId(extractedStoreId);
+        setProductId(extractedProductId);
+    }, [router, search]);
+
+    useEffect(() => {
+        if (!storeId || !productId) return;
+
+        const fetchDetails = async () => {
+            setLoading(true);
+            try {
+                const data = isScannedCode ? await getProductDetailsByScannedCode(productId, storeId) : await getProductDetails(productId, storeId);
+                setProductDetails(data.data);
+            } catch (err) {
+                router.push("/404")
+                showToast(err.message || "Failed to fetch product details", "error", 5000);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDetails();
+    }, [storeId, productId]);
+
+    if (loading) {
+        return <Loading/>
+    }
+
+    if (!productDetails) {
+        router.push("/404")
+        showToast("No product details available", "error", 5000);
+        return <Loading/>
+    }
+
+    const handleOptionSelection = (option) => {
+        setQuantity(option)
+        console.log("Opcion seleccionada: ", option)
+    }
+
+    const handleAddProduct = async () => {
+        try {
+            const userData = localStorage.getItem('user');
+            const { userId } = userData ? JSON.parse(userData) : {};
+            if (!userId) {
+                showToast('Inicio de sesión requerido!', "error", 5000);
+            }
+            await addProductToShoppingList(userId, productId, storeId, quantity);
+            if (quantity == 1) {
+                showToast(`${quantity} Producto agregado al carrito`, "success", 5000);
+            } else {
+                showToast(`${quantity} Productos agregados al carrito`, "success", 5000);
+            }
+        } catch (err) {
+            showToast(err.message, "error", 5000);
+        }
+    };
 
     return (
         <div className={styles.mainContainer}>
             <div className={styles.title}>
-                <h3>{product.name}</h3>
-                <Link href={`/store/${product.supermarket}`}><p className={styles.supermarketTitle}>{"(Supermercado " + product.supermarket + ")"}</p></Link>
+                <h3>{productDetails.name}</h3>
+                <Link href={`/store/${productDetails.supermarketId}`}><p className={styles.supermarketTitle}>{"(Supermercado " + productDetails.supermarket + ")"}</p></Link>
             </div>
 
             <div className={styles.topInfo}>
                     <img 
-                        src={product.image}
+                        src={productDetails.image}
                         width="30%"
-                        alt={product.name}
+                        alt={productDetails.name}
                         className={styles.topImage}/>
                 <div className={styles.topDescriptionOptions}>
-                    <div>
-                        <p style={{ fontWeight: "300" }}>{product.description}</p>
+                    <div className={styles.topDescription}>
+                        <p style={{ fontWeight: "300" }}>{productDetails.description}</p>
                     </div> 
                     <div className={styles.topOptions}>
                         <div className={styles.topCartOptions}>
-                            <AdjustableDropdown value={quantity1 ? quantity1 : 1} options={options}/>
-                            <Button variant="contained" className={"font-semibold"} sx={{background:"#FF9F1C", color: "#000000", borderRadius: "25px", fontFamily: "var(--font-poppins)", fontSize: "12px", padding: "10px"}}>
+                            <AdjustableDropdown value={quantity ? quantity : 1} options={options} onSelection={handleOptionSelection}/>
+                            <Button 
+                                variant="contained"
+                                className={"font-semibold"}
+                                sx={{background:"#FF9F1C", color: "#000000", borderRadius: "25px", fontFamily: "var(--font-poppins)", fontSize: "12px", padding: "10px"}}
+                                onClick={handleAddProduct}>
                                 Agregar al carrito
                             </Button>
                         </div>
-                        <ProductComparing product={product}/>
+                        <ProductComparing product={productDetails} openAtStart={isInitialComparation}/>
                     </div>  
                 </div>
             </div>
 
             <div className={styles.bottomInfo}>
                 <div className={styles.nutritionData}>
-                    <NutritionData data={product.nutritionData} />
+                    <NutritionData data={productDetails.nutritionalData} />
                 </div>
                 <div className={styles.CostTrendChart}>
-                    <CostTrendChart tendency={product.tendency}/>
+                    <CostTrendChart history={productDetails.history}/>
                 </div>
-
-
-
             </div>
         </div>
     )

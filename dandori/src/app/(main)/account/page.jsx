@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./account.module.css"
 import Image from "next/image"
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
@@ -8,6 +8,10 @@ import { useForm, useController } from "react-hook-form";
 import TextFields from "@/components/TextFields";
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { changePassword } from "@/app/services/auth";
+import { showToast } from "@/components/CustomizedSnackbars";
+import { useRouter } from "next/navigation";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GradientButton = styled(Button)({
     background: "linear-gradient(to right, #F71735, #FF9F1C)",
@@ -42,24 +46,23 @@ function ControllerField({ control, name, rules, ...props }) {
 
 export default function Account() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState({
+        registryDate: "",
+        user: "" 
+    });
 
-    const account = {
-        email: "donato.machadosantos@gmail.com",
-        password: "Password123&",
-        registrationDate: "17/8/2024"
-    }
-
-    const { control, register, handleSubmit, formState:{errors}, reset, watch } = useForm({
+    const { control, handleSubmit, formState:{errors}, reset, watch } = useForm({
         mode: "onSubmit",         // Valida solo al enviar
         shouldFocusError: false,   // No enfoca en el primer error
       });
+
+    const router = useRouter()
 
     const toggleView = () => {
         setIsExpanded(!isExpanded);
         reset();
     };
-
-    
 
     const getUsername = (email) => {
         if (!email) return "usuario";
@@ -70,11 +73,35 @@ export default function Account() {
         return username;
     };
 
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
 
-    const onSubmit = handleSubmit((data) => {
-        alert("Edicion de cuenta empezado")
-        console.log(data);
-        reset()
+        if (userData) {
+            const parsedUser = JSON.parse(userData);
+            setData({
+                registryDate: parsedUser.registryDate || "",
+                user: parsedUser.user || ""
+            })
+        }
+    }, []);
+
+    const onSubmit = handleSubmit( async (data) => {
+        try {
+            setLoading(true);
+            const response = await changePassword(data.oldPassword, data.password);
+            if (!response.success) {
+                showToast(response.message, "error", 5000);
+                setLoading(false)
+                return;
+            }
+            showToast("Contraseña cambiada exitosamente", "success", 5000);
+            setLoading(false)
+            reset();
+            router.push('/');
+          } catch (err) {
+            showToast(err.message || 'An error occurred while changing the password', "error", 5000);
+            setLoading(false)
+          }
     })
 
     return(
@@ -89,7 +116,7 @@ export default function Account() {
                     className={styles.frontImage}
                 />
                 <div className={styles.frontTitle}>
-                    <h2 className={styles.titles}>hola, {getUsername(account.email)}</h2>
+                    <h2 className={styles.titles}>hola, {getUsername(data.user)}</h2>
                 </div>
             </div>
             <div className={styles.bodyContainer}>
@@ -106,7 +133,7 @@ export default function Account() {
                                 name="email"
                                 type="text"
                                 bgcolor="#ffffff"
-                                value={account.email}
+                                value={data.user}
                                 disabled={true}
                             />
                         </div>
@@ -117,7 +144,10 @@ export default function Account() {
                                 name="date"
                                 type="text"
                                 bgcolor="#ffffff"
-                                value={account.registrationDate}
+                                value={new Date(data.registryDate).toLocaleString('es-ES', {
+                                    dateStyle: 'short', // Muestra solo la fecha
+                                    timeStyle: 'medium', // Incluye horas, minutos y segundos
+                                  })}
                                 disabled={true}
                             />
                         </div>
@@ -141,7 +171,14 @@ export default function Account() {
                                             value: true,
                                             message: "La contraseña es requerida",
                                         },
-                                        validate: (value) => value === account.password || "La contraseña no es válida",
+                                        minLength: {
+                                            value: 6,
+                                            message: "La contraseña tiene que tener más de 6 dígitos",
+                                        },
+                                        pattern: {
+                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{6,}$/, // Todos los patrones combinados
+                                            message: "La contraseña debe de contener al menos una minúscula, mayúscula, número y simbolo",
+                                        },
                                     }}
                                 />
                             </div>
@@ -171,7 +208,6 @@ export default function Account() {
                                                 return "La contraseña no puede ser la misma que la anterior"
                                             }
                                         }
-                                        
                                     }}
                                 />
                             </div>
@@ -188,13 +224,15 @@ export default function Account() {
                                             value: true,
                                             message: "Password confirmation is required",
                                         },
-                                        validate: (value) => value === watch("password") || "Passwords must match",
+                                        validate: (value) => value === watch("password") || "La contraseña deben coincidir",
                                     }}
                                 />
                             </div>
                         
-                            <GradientButton type="submit" disableRipple>
-                                <h4 className={styles.buttonTitle}>Confirmar</h4>
+                            <GradientButton type="submit" disableRipple disabled={loading}>
+                                {loading
+                                    ? <CircularProgress sx={{ color:"#fcbac1" }} size="30px"/>
+                                    : <h4 className={styles.buttonTitle}>Confirmar</h4>}
                             </GradientButton>
                         </form>
                     </div>

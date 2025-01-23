@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CommonLayout from "../layout";
+import Toast from "@/components/CustomizedSnackbars";
 
 export const metadata = {
   title: "Dandori - Simplificando tus decisiones de compras de supermercado",
@@ -14,6 +15,7 @@ export default function MainLayout({ children }) {
       <div style={{display:"flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between"}}>
           {children}
           <Footer/>
+          <Toast/>
       </div>
     </CommonLayout>
   );

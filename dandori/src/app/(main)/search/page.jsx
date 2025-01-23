@@ -1,100 +1,111 @@
-'use client'
-import styles from "./search.module.css"
-import { useSearchParams } from "next/navigation"
+"use client";
+import styles from "./search.module.css";
 import ProductCard from "@/components/ProductCard";
 import PaginationControls from "@/components/PaginationControls";
-import { Button } from "@mui/material";
-
-
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { searchProducts } from "@/app/services/product";
+import Loading from "../loading";
 export default function Search({ searchParams }) {
-    //JSON de ejemplo
-    const foundProducts = [
-        {
-            image: "https://myplate-prod.azureedge.us/sites/default/files/styles/recipe_525_x_350_/public/2020-10/EasyGreekSalad527x323.jpg?itok=KInBpWEf",
-            name: "Manzana Roja",
-            supermarket: "Supermercado Sirenaravo",
-            price: "1.50"
-        },
-        {
-            image: "https://th.bing.com/th/id/R.4f1c126a17e9e20041148210d5795fa3?rik=ulJ%2bbZuSKapkXw&riu=http%3a%2f%2fimg.taste.com.au%2fQaDKlckA%2ftaste%2f2016%2f11%2ffresh-summer-vegetable-salad-91664-1.jpeg&ehk=tj7qLs2rAIGitkP7H44hpoWV8dVLz%2bbMDoFcImb8w9U%3d&risl=&pid=ImgRaw&r=0",
-            name: "Leche Descremada probando nombre largo",
-            supermarket: "Supermercado Sirena",
-            price: "3.00"
-        },
-        {
-            image: "https://www.garnishandglaze.com/wp-content/uploads/2021/03/easy-side-salad-6.jpg",
-            name: "Pan Integral",
-            supermarket: "Supermercado Jumbo",
-            price: "2.25"
-        },
-        {
-            image: "https://myplate-prod.azureedge.us/sites/default/files/styles/recipe_525_x_350_/public/2020-10/EasyGreekSalad527x323.jpg?itok=KInBpWEf",
-            name: "arroz Blanco",
-            supermarket: "Supermercado Sirenaravo",
-            price: "0.90"
-        },
-        {
-            image: "https://www.garnishandglaze.com/wp-content/uploads/2021/03/easy-side-salad-6.jpg",
-            name: "Queso Cheddar",
-            supermarket: "Supermercado Plaza Lama",
-            price: "4.00"
-        },
-        {
-            image: "https://myplate-prod.azureedge.us/sites/default/files/styles/recipe_525_x_350_/public/2020-10/EasyGreekSalad527x323.jpg?itok=KInBpWEf",
-            name: "Manzana Roja",
-            supermarket: "Supermercado Sirenaravo",
-            price: "1.50"
-        },
-        {
-            image: "https://myplate-prod.azureedge.us/sites/default/files/styles/recipe_525_x_350_/public/2020-10/EasyGreekSalad527x323.jpg?itok=KInBpWEf",
-            name: "Leche Descremada",
-            supermarket: "Supermercado Sirena",
-            price: "3.00"
-        },
-        {
-            image: "https://th.bing.com/th/id/R.4f1c126a17e9e20041148210d5795fa3?rik=ulJ%2bbZuSKapkXw&riu=http%3a%2f%2fimg.taste.com.au%2fQaDKlckA%2ftaste%2f2016%2f11%2ffresh-summer-vegetable-salad-91664-1.jpeg&ehk=tj7qLs2rAIGitkP7H44hpoWV8dVLz%2bbMDoFcImb8w9U%3d&risl=&pid=ImgRaw&r=0",
-            name: "Pan Integral",
-            supermarket: "Supermercado Jumbo",
-            price: "2.25"
-        },
-        {
-            image: "https://myplate-prod.azureedge.us/sites/default/files/styles/recipe_525_x_350_/public/2020-10/EasyGreekSalad527x323.jpg?itok=KInBpWEf",
-            name: "arroz Blanco",
-            supermarket: "Supermercado Sirenaravo",
-            price: "0.90"
-        },
-        {
-            image: "https://i.pinimg.com/originals/83/3c/88/833c88e97c73f758a1cfbea52793a2ce.jpg",
-            name: "Queso Cheddar",
-            supermarket: "Supermercado Plaza Lama",
-            price: "4.00"
-        }
-    ];
+  const router = useRouter();
+  const currentSearchParams = useSearchParams();
 
-    const page = searchParams['page'] ?? '1';
-    const per_page = searchParams['per_page'] ?? '10';
+  const [search, setSearch] = useState("");
+  const [limit] = useState(searchParams.per_page || 10); // Fixed limit per page
+  const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: parseInt(searchParams.page || 1),
+    pages: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    const start = (Number(page) - 1) * Number(per_page);
-    const end = start + Number(per_page);
-    
-    const entries = foundProducts.slice(start, end)
+  // Fetch products based on search, page, and limit
+  const fetchProducts = async (searchQuery, page, limit) => {
+    try {
+      setError("");
+      setLoading(true);
+      const response = await searchProducts(searchQuery, page, limit);
+      setProducts(response.data);
+      setPagination(response.pagination);
+    } catch (err) {
+      setError(err.message || "Failed to fetch products");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // const searchParams = useSearchParams();
-    let params = { ...searchParams };
-    const search = params.query;
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    const params = new URLSearchParams(currentSearchParams.toString());
+    params.set("page", newPage);
+    router.push(`?${params.toString()}`);
 
-    return(
-        <div className={styles.mainContainer}>
-            <h3>Resultados de buscar "{search}"</h3>
-            <div className={styles.foundProducts}>
-                {entries.map((product, index) => (
-                    <ProductCard key={index} product={product}/>
-                ))}
-            </div>
-            {/* <PaginationControls
-                search={search}
-                total={Math.ceil(foundProducts.length / 4)}
-            /> */}
+    // Update pagination state
+    setPagination((prev) => ({ ...prev, page: newPage }));
+  };
+
+  useEffect(() => {
+    const query = searchParams.query || "";
+    const page = parseInt(searchParams.page || 1);
+    setSearch(searchParams.query || "");
+
+    // Fetch products whenever search or page changes
+    fetchProducts(query, page, limit);
+  }, [searchParams.query, searchParams.page]);
+
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <div className={styles.mainContainer}>
+        <h3>No se han encontrado resultados al buscar "{search}"</h3>
+        <div className={styles.notFound}>
+          <img
+            src="https://cdn-icons-gif.flaticon.com/17569/17569494.gif"
+            alt="Search"
+            title="Search"
+            width="100"
+            height="125"
+            style={{ filter: "grayscale(90%)" }}
+          />
+          <h5 style={{ textAlign: "center" }}>
+            Haz click para{" "}
+            <Link
+              href="/"
+              style={{
+                textDecoration: "underline",
+                textAlign: "center",
+                color: "red",
+                paddingBlock: "2em",
+                fontFamily: "var(--font-poppins)",
+              }}
+            >
+              continuar viendo
+            </Link>
+          </h5>
         </div>
-    )
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.mainContainer}>
+    <h3>Resultados de buscar "{search}"</h3>
+    <div className={styles.foundProducts}>
+      {products.map((product, index) => (
+        <ProductCard key={index} product={product} />
+      ))}
+    </div>
+    <div style={{ marginTop: "20px" }}>
+      <PaginationControls
+        // search={search}
+        page={pagination.page}
+        totalPages={pagination.pages}
+        onPageChange={handlePageChange}
+      />
+    </div>
+  </div>
+  );
 }
